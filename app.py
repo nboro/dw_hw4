@@ -26,11 +26,11 @@ app.layout = layout
     Output('song-feature-graph', 'figure'),
     [Input('xaxis-column', 'value')])
 def update_graph(xaxis_value):
-    df = selected_songs[['title','year',xaxis_value]]
+    df = selected_songs[['title','year','title_year',xaxis_value]]
     traces = []
     traces.append(dict(
         x=df[xaxis_value],
-        y=df['title'],
+        y=df['title_year'],
         # text=df_by_country['car name'],
         # customdata = df_by_country['year'],
         type='bar',
@@ -45,7 +45,7 @@ def update_graph(xaxis_value):
             title = 'Song features of Top 15 for 2019',
             xaxis={'type': 'Linear', 'title': '', 'range': [0.0, 1.0]},
             yaxis={'title': ''},
-            margin={'l': 150, 'b': 40, 't': 50, 'r': 30},
+            margin={'l': 180, 'b': 40, 't': 50, 'r': 10},
             legend={'x': 1, 'y': 1},
             hovermode='closest',
             transition = {'duration': 500},
