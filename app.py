@@ -58,7 +58,7 @@ def update_graph99(oldest_first_value):
     return {
         'data': traces,
         'layout': dict(
-            title = 'Song features throughout the years',
+            title = 'The mean of song features throughout the years',
             xaxis={'title': 'Years'},
             yaxis={'title': 'Mean '+oldest_first_value,'range': [0.0, 1.0]},
             margin={'l': 180, 'b': 40, 't': 50, 'r': 10},
