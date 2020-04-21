@@ -16,11 +16,6 @@ layout = html.Div(
         ),
         dbc.Row(
             [
-                dbc.Col(generate_table(features_descriptions),width=8),
-            ],justify="center",
-        ),
-        dbc.Row(
-            [
                 dbc.Col(html.Div([
                     # html.Label('Audio features per song'),
                     dcc.Dropdown(
@@ -36,6 +31,11 @@ layout = html.Div(
                 ]),width=8),
             ],            
             justify="center",
+        ),
+        dbc.Row(
+            [
+                dbc.Col(generate_table(features_descriptions),width=8),
+            ],justify="center",
         ),       
     ]
 
