@@ -2,7 +2,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import pandas as pd
-from data import feature_list
+from data import feature_list, features_descriptions
+from generate_table import generate_table
 
 
 layout = html.Div(
@@ -15,19 +16,8 @@ layout = html.Div(
         ),
         dbc.Row(
             [
-                dbc.Col(html.Div(children=[
-                    dcc.Graph(
-                        id='song-feature-99',
-                    ),
-                ]),width=6),
-                dbc.Col(html.Div(children=[
-                    dcc.Graph(
-                        id='song-feature-19',
-                    ),
-                ]),width=6),
-
-            ],            
-            justify="center",
+                dbc.Col(generate_table(features_descriptions),width=8),
+            ],justify="center",
         ),
         dbc.Row(
             [
@@ -38,25 +28,15 @@ layout = html.Div(
                         options=[{'label': key, 'value': key} for key in feature_list],
                         value= 'Danceability'
                     ),
-                ]), width=4),                
-            ],
-            justify="center",
-        ),
-        dbc.Row(
-            [
-                dbc.Col(html.Div([
-                    # html.Label('Audio features per song'),
-                    dcc.Dropdown(
-                        id='oldest-second',
-                        options=[{'label': key, 'value': key} for key in feature_list],
-                        value= 'Energy'
+                ]),width=2,align="center"),
+                dbc.Col(html.Div(children=[
+                    dcc.Graph(
+                        id='song-feature-99',
                     ),
-                ]), width=4),
-                
-            ],
+                ]),width=8),
+            ],            
             justify="center",
-        ),
-        
-    ],
+        ),       
+    ]
 
 )

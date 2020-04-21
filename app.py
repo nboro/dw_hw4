@@ -7,7 +7,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from view import layout
-from data import selected_songs19,selected_songs99
+from data import songs_bill_melt
 
 app = dash.Dash(
     __name__,meta_tags=[{'name': 'viewport', 'content': 'width=device-width',
@@ -23,72 +23,44 @@ app.title = 'HW4 Data Visualization | Top 2000 Dataset'
 app.layout = layout
 
 @app.callback(
-    Output('song-feature-19', 'figure'),
-    [Input('oldest-first', 'value'),
-    Input('oldest-second', 'value')])
-def update_graph19(oldest_first_value,oldest_second_value):
-
-    dfx = selected_songs19[['title','year','title_year',oldest_first_value]]
-    dfy = selected_songs19[['title','year','title_year',oldest_second_value]]
-
-    traces = []
-    for i in selected_songs19.title_year.unique():
-        dfx_by_title_year = dfx[dfx['title_year'] == i]
-        dfy_by_title_year = dfy[dfy['title_year'] == i]
-        traces.append(dict(
-            x=dfx_by_title_year[oldest_first_value],
-            y=dfy_by_title_year[oldest_second_value],
-            text=dfy_by_title_year['title_year'],
-            mode='markers',
-            marker={
-                'size': 15,
-                'opacity':0.7,
-                'line': {'width': 0.5, 'color': 'white'}
-            },
-        name=i
-        ))
-    return {
-        'data': traces,
-        'layout': dict(
-            title = 'Song features of Top 15 for 2019',
-            xaxis={'title': oldest_first_value, 'range': [0.0, 1.0]},
-            yaxis={'title': oldest_second_value},
-            margin={'l': 180, 'b': 40, 't': 50, 'r': 10},
-            legend={'x': 1, 'y': 1},
-            hovermode='closest',
-        )
-    }
-@app.callback(
     Output('song-feature-99', 'figure'),
-    [Input('oldest-first', 'value'),
-    Input('oldest-second', 'value')])
-def update_graph99(oldest_first_value,oldest_second_value):
+    [Input('oldest-first', 'value')])
+def update_graph99(oldest_first_value):
 
-    dfx = selected_songs99[['title','year','title_year',oldest_first_value]]
-    dfy = selected_songs99[['title','year','title_year',oldest_second_value]]
-
+    # years = list(songs_bill_melt.bill_year.unique())
     traces = []
-    for i in selected_songs99.title_year.unique():
-        dfx_by_title_year = dfx[dfx['title_year'] == i]
-        dfy_by_title_year = dfy[dfy['title_year'] == i]
-        traces.append(dict(
-            x=dfx_by_title_year[oldest_first_value],
-            y=dfy_by_title_year[oldest_second_value],
-            text=dfy_by_title_year['title_year'],
-            mode='markers',
-            marker={
-                'size': 15,
-                'opacity':0.7,
-                'line': {'width': 0.5, 'color': 'white'}
-            },
-        name=i
-        ))
+    mean_df = songs_bill_melt.groupby(['old','bill_year'])[oldest_first_value].mean().reset_index()
+
+    traces.append(dict(
+        x=mean_df[mean_df['old']]['bill_year'],
+        y=mean_df[mean_df['old']][oldest_first_value],
+        # text=dfy_by_title_year['title_year'],
+        mode='lines',
+        marker={
+            'size': 15,
+            'opacity':0.7,
+            'line': {'width': 0.5, 'color': 'white'}
+        },
+        name= 'Songs before 2000'
+    ))
+    traces.append(dict(
+        x=mean_df[~mean_df['old']]['bill_year'],
+        y=mean_df[~mean_df['old']][oldest_first_value],
+        # text=dfy_by_title_year['title_year'],
+        mode='lines',
+        marker={
+            'size': 15,
+            'opacity':0.7,
+            'line': {'width': 0.5, 'color': 'white'}
+        },
+        name='Songs after 2000'
+    ))
     return {
         'data': traces,
         'layout': dict(
-            title = 'Song features of Top 15 for 1999',
-            xaxis={'title': oldest_first_value, 'range': [0.0, 1.0]},
-            yaxis={'title': oldest_second_value},
+            title = 'Song features throughout the years',
+            xaxis={'title': 'Years'},
+            yaxis={'title': 'Mean '+oldest_first_value,'range': [0.0, 1.0]},
             margin={'l': 180, 'b': 40, 't': 50, 'r': 10},
             legend={'x': 1, 'y': 1},
             hovermode='closest',
