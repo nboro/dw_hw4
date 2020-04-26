@@ -1,26 +1,51 @@
+from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
 
 from app import app
-from view_features import layout_features as features
-import callbacks
+from pages import scatter, genres, features, lyrics
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
+    html.Div(children=[
+        dcc.Link("<< PREV", id="prev-page", href="#"),
+        dcc.Link("NEXT >>", id="next-page", href="#")
+    ]),
     html.Div(id='page-content')
 ])
-server = app.server
 
-@app.callback(Output('page-content', 'children'),
-              [Input('url', 'pathname')])
+index = html.Div([
+    dcc.Link('Main Scatter', href='/scatter'),
+    html.Br(),
+    dcc.Link('Genres', href='/genres'),
+    html.Br(),
+    # dcc.Link('Era Features', href='/eras'),
+    # html.Br(),
+    dcc.Link('Song Features', href='/features'),
+    html.Br(),
+    dcc.Link('Lyrics', href='/lyrics')
+])
+
+
+@app.callback(
+    [Output('page-content', 'children'), Output('prev-page', 'href'), Output('next-page', 'href')],
+    [Input('url', 'pathname')]
+)
 def display_page(pathname):
-    if pathname == '/hw4/features':
-         return features
-    # elif pathname == '/apps/app2':
-    #      return layout2
-    else:
-        return 'This how now the first page'
+    if pathname == "/":
+        return index, "/lyrics", "/scatter"
+    elif pathname == "/scatter":
+        return scatter.content, "/", "/genres"
+    elif pathname == "/genres":
+        return genres.content, "/scatter", "/features"
+    # elif pathname == "/eras":
+    #     return eras.content, "/genres", "/features"
+    elif pathname == "/features":
+        return features.content, "/genres", "/lyrics"
+    elif pathname == "/lyrics":
+        return lyrics.content, "/features", "/"
+    return "404"
+
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=80)
+    app.run_server(debug=True)
