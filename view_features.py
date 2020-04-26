@@ -36,7 +36,8 @@ layout = html.Div(
             [
                 dbc.Col(generate_table(features_descriptions),width=8),
             ],justify="center",
-        ),       
-    ]
-
+        ),
+        html.Div(id='app-1-display-value'),
+        # dcc.Link('Go to App 2', href='/apps/app2')       
+    ],
 )
