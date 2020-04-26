@@ -2,7 +2,6 @@
 # import pickle
 import dash
 import dash_bootstrap_components as dbc
-import flask
 # import dash_html_components as html
 # from dash.dependencies import Input, Output
 # import plotly.graph_objs as go
@@ -22,7 +21,3 @@ server = app.server
 app.title = 'HW4 Data Visualization | Top 2000 Dataset'
 # app.layout = layout
 app.config.suppress_callback_exceptions = True
-
-
-# if __name__ == '__main__':
-#     app.run_server(debug=True, port=80)
