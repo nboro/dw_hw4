@@ -17,7 +17,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 
-server = app.server
+# server = app.server
 app.title = 'HW4 Data Visualization | Top 2000 Dataset'
 # app.layout = layout
 app.config.suppress_callback_exceptions = True
