@@ -21,7 +21,7 @@ app = dash.Dash(
 server = app.server
 app.title = 'HW4 Data Visualization | Top 2000 Dataset'
 # app.layout = layout
-app.config.suppress_callback_exceptions = True
+# app.config.suppress_callback_exceptions = True
 
 
 # if __name__ == '__main__':

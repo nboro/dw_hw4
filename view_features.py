@@ -6,7 +6,7 @@ from data import feature_list, features_descriptions
 from generate_table import generate_table
 
 
-layout = html.Div(
+layout_features = html.Div(
     [
         dbc.Row(
             [
