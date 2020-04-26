@@ -22,4 +22,4 @@ def display_page(pathname):
         return 'This how now the first page'
 
 if __name__ == '__main__':
-    app.run_server(port=80)
+    app.run_server(debug=True, port=80)
