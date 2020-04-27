@@ -73,6 +73,8 @@ fig_dict = {
         paper_bgcolor='white',
         plot_bgcolor='white',
         hovermode='closest',
+        width=1024,
+        height=760,
     )
 }
 fig = go.Figure(fig_dict)

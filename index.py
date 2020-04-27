@@ -5,6 +5,10 @@ import dash_html_components as html
 
 from app import app
 from pages import scatter, genres, eras, features, lyrics
+from navbar import Navbar
+
+nav = Navbar()
+
 
 
 app.layout = html.Div([
