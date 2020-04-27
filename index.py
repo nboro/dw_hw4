@@ -9,6 +9,9 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(children=[
         dcc.Link("<< PREV", id="prev-page", href="#"),
+        "|",
+        dcc.Link("HOME", id="home-page", href="/"),
+        "|",
         dcc.Link("NEXT >>", id="next-page", href="#")
     ]),
     html.Div(id='page-content')
