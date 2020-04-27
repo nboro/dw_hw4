@@ -5,19 +5,20 @@ import dash_html_components as html
 
 from app import app
 from pages import scatter, genres, eras, features, lyrics
-from navbar import Navbar
-
-nav = Navbar()
-
-
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(children=[
+        dbc.Row(
+            [
+                dbc.Col(html.H2('Data Visualization - Top 2000 Group 3'),className="text-center",
+                style={'text-decoration':'underline'}),
+            ]
+        ),
         dcc.Link("<< PREV", id="prev-page", href="#"),
-        "|",
+        " | ",
         dcc.Link("HOME", id="home-page", href="/"),
-        "|",
+        " | ",
         dcc.Link("NEXT >>", id="next-page", href="#")
     ]),
     html.Div(id='page-content')

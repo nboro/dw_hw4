@@ -19,13 +19,14 @@ with open('data/best_era_df.pkl', 'rb') as input_file:
 feature_list = ['Danceability','Energy','Speachiness','Instrumentalness','Liveness','Valence','Tempo']
 
 feature_desc = {
-    'Danceability':'How suitable a track is for dancing.'
-    ,'Energy':'	Perceptual measure of intensity and activity.'
-    ,'Speachiness':'The presence of spoken words in a track.'
-    ,'Instrumentalness':'Whether a track contains no vocals.'
+    'Valence':'Musical positiveness (e.g. happy, cheerful, euphoric) conveyed by a track.'
     ,'Liveness':'The presence of an audience in the recording.'
-    ,'Valence':'Musical positiveness (e.g. happy, cheerful, euphoric) conveyed by a track.'
+    ,'Instrumentalness':'Whether a track contains no vocals.' 
+    ,'Speachiness':'The presence of spoken words in a track.'
+    ,'Energy':'	Perceptual measure of intensity and activity.'
+    ,'Danceability':'How suitable a track is for dancing.'       
     ,'Tempo':'The overall estimated tempo of a track in beats per minute (BPM).'
+    ,'Loudness':'The overall loudness of a track in decibels (dB).',
 }
 
 features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
@@ -83,12 +84,6 @@ content = html.Div(
     [
         dbc.Row(
             [
-                dbc.Col(html.H2('Data Visualization - Top 2000 Group 3'),className="text-center",
-                style={'text-decoration':'underline'}),
-            ]
-        ),
-        dbc.Row(
-            [
                 # dbc.Col(html.Div([
                 #     dcc.Dropdown(
                 #         id='oldest-first',
@@ -96,20 +91,17 @@ content = html.Div(
                 #         value= 'Danceability'
                 #     ),
                 # ]),width=2,align="center"),
+                
                 dbc.Col(html.Div(children=[
                     dcc.Graph(
                         id='song-feature-99',
                         config=dict(responsive=True),
                         figure = fig
                     ),
-                ]),width=8),
+                ]),width="auto"),
+                dbc.Col(generate_table(features_descriptions, max_rows=8),width="auto",align="center"),
             ],            
             justify="center",
-        ),
-        dbc.Row(
-            [
-                dbc.Col(generate_table(features_descriptions, max_rows=7),width=8),
-            ],justify="center",
         ),
         html.Div(id='app-1-display-value'),
         # dcc.Link('Go to App 2', href='/apps/app2')       
