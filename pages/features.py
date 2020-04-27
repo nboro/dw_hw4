@@ -1,7 +1,9 @@
+import plotly.graph_objects as go
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import pandas as pd
+import numpy as np
 import pickle
 
 from dash.dependencies import Output, Input
@@ -11,17 +13,10 @@ from app import app
 
 # DATA LOADING
 
-with open('data/songs_with_features.pkl', 'rb') as input_file:
-    songs_with_features = pickle.load(input_file)
+with open('data/best_era_df.pkl', 'rb') as input_file:
+    best_era_df = pickle.load(input_file)
 
-with open('data/songs_bill_melt.pkl', 'rb') as input_file:
-    songs_bill_melt = pickle.load(input_file)
-
-selected_songs19 = songs_with_features.head(15).sort_values(by='zero_nineteen',ascending=True)
-selected_songs99 = songs_with_features[songs_with_features['ninety_nine'] > 0]
-selected_songs99 = selected_songs99.head(15).sort_values(by='ninety_nine',ascending=True)
-
-feature_list = ['Danceability','Energy','Speachiness','Instrumentalness','Liveness','Valence']
+feature_list = ['Danceability','Energy','Speachiness','Instrumentalness','Liveness','Valence','Tempo']
 
 feature_desc = {
     'Danceability':'How suitable a track is for dancing.'
@@ -30,13 +25,57 @@ feature_desc = {
     ,'Instrumentalness':'Whether a track contains no vocals.'
     ,'Liveness':'The presence of an audience in the recording.'
     ,'Valence':'Musical positiveness (e.g. happy, cheerful, euphoric) conveyed by a track.'
+    ,'Tempo':'The overall estimated tempo of a track in beats per minute (BPM).'
 }
 
 features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
 features_descriptions = features_descriptions.reset_index()
 features_descriptions = features_descriptions.rename(columns={0:'Feature description','index':'Features'})
 
+color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
 
+fig_dict = {
+    'data':[
+        dict(
+            x=best_era_df[best_era_df['Song Era'] == i]['Compared to Oldies (Song Released < 1990)'],
+            y=best_era_df[best_era_df['Song Era'] == i]['Song Features'],
+            mode='markers',
+            marker=dict(
+                line_width=1, 
+                symbol='circle', 
+                size=16,
+                color= color_sequence[np.where(best_era_df['Song Era'].unique() == i)[0][0]]
+            ),
+            name = i
+        ) for i in best_era_df['Song Era'].unique()
+    ],
+    # 'template':'plotly_white',
+    'layout':dict(
+        title='Comparing Features of Different Song Eras (based on Spotify API)',                                xaxis=dict(
+            title='Compared to Oldies (Song Released < 1990)',
+            showgrid=False,
+            showline=True,
+            linecolor='rgb(102, 102, 102)',
+            tickfont_color='rgb(102, 102, 102)',
+            showticklabels=True,
+            dtick=25,
+            ticks='outside',
+            tickcolor='rgb(102, 102, 102)',
+            ticksuffix='%'
+        ),
+        yaxis=dict(title='Song features'),
+        margin=dict(l=140, r=0, b=50, t=80),
+        legend=dict(
+            font_size=10,
+            yanchor='middle',
+            xanchor='right',
+        ),
+        paper_bgcolor='white',
+        plot_bgcolor='white',
+        hovermode='closest',
+    )
+}
+fig = go.Figure(fig_dict)
 # CONTENT
 
 content = html.Div(
@@ -49,17 +88,18 @@ content = html.Div(
         ),
         dbc.Row(
             [
-                dbc.Col(html.Div([
-                    # html.Label('Audio features per song'),
-                    dcc.Dropdown(
-                        id='oldest-first',
-                        options=[{'label': key, 'value': key} for key in feature_list],
-                        value= 'Danceability'
-                    ),
-                ]),width=2,align="center"),
+                # dbc.Col(html.Div([
+                #     dcc.Dropdown(
+                #         id='oldest-first',
+                #         options=[{'label': key, 'value': key} for key in feature_list],
+                #         value= 'Danceability'
+                #     ),
+                # ]),width=2,align="center"),
                 dbc.Col(html.Div(children=[
                     dcc.Graph(
                         id='song-feature-99',
+                        config=dict(responsive=True),
+                        figure = fig
                     ),
                 ]),width=8),
             ],            
@@ -67,7 +107,7 @@ content = html.Div(
         ),
         dbc.Row(
             [
-                dbc.Col(generate_table(features_descriptions, max_rows=6),width=8),
+                dbc.Col(generate_table(features_descriptions, max_rows=7),width=8),
             ],justify="center",
         ),
         html.Div(id='app-1-display-value'),
@@ -77,47 +117,3 @@ content = html.Div(
 
 
 # CALLBACKS
-@app.callback(
-    Output('song-feature-99', 'figure'),
-    [Input('oldest-first', 'value')])
-def update_graph99(oldest_first_value):
-
-    # years = list(songs_bill_melt.bill_year.unique())
-    traces = []
-    mean_df = songs_bill_melt.groupby(['old','bill_year'])[oldest_first_value].mean().reset_index()
-
-    traces.append(dict(
-        x=mean_df[mean_df['old']]['bill_year'],
-        y=mean_df[mean_df['old']][oldest_first_value],
-        # text=dfy_by_title_year['title_year'],
-        mode='lines',
-        marker={
-            'size': 15,
-            'opacity':0.7,
-            'line': {'width': 0.5, 'color': 'white'}
-        },
-        name= 'Songs before 2000'
-    ))
-    traces.append(dict(
-        x=mean_df[~mean_df['old']]['bill_year'],
-        y=mean_df[~mean_df['old']][oldest_first_value],
-        # text=dfy_by_title_year['title_year'],
-        mode='lines',
-        marker={
-            'size': 15,
-            'opacity':0.7,
-            'line': {'width': 0.5, 'color': 'white'}
-        },
-        name='Songs after 2000'
-    ))
-    return {
-        'data': traces,
-        'layout': dict(
-            title = 'The mean of song features throughout the years',
-            xaxis={'title': 'Years'},
-            yaxis={'title': 'Mean '+oldest_first_value,'range': [0.0, 1.0]},
-            margin={'l': 180, 'b': 40, 't': 50, 'r': 10},
-            legend={'x': 1, 'y': 1},
-            hovermode='closest',
-        )
-    }

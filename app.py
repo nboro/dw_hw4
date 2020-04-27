@@ -7,5 +7,5 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP]
 )
 
-app.title = 'HW4 Data Visualization | Top 2000 Dataset'
+app.title = 'HW4 Data Visualization Group3 | Top 2000 Dataset'
 app.config.suppress_callback_exceptions = True
