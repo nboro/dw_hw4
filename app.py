@@ -8,5 +8,4 @@ app = dash.Dash(
 )
 
 app.title = 'HW4 Data Visualization | Top 2000 Dataset'
-server = app.server
 app.config.suppress_callback_exceptions = True

@@ -46,6 +46,7 @@ def display_page(pathname):
         return lyrics.content, "/features", "/"
     return "404"
 
+server = app.server
 
 if __name__ == '__main__':
     app.run_server(debug=True)
