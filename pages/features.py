@@ -77,7 +77,6 @@ fig_dict = {
 }
 fig = go.Figure(fig_dict)
 # CONTENT
-
 content = html.Div(
     [
         dbc.Row(
