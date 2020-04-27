@@ -38,7 +38,6 @@ features_descriptions = features_descriptions.rename(columns={0:'Feature descrip
 
 
 # CONTENT
-
 content = html.Div(
     [
         dbc.Row(

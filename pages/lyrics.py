@@ -205,8 +205,12 @@ def display_artist_info(lang, click_data):
     avg_song_year = math.ceil(artist["avg_song_year"])
     curr_img = artist["images"][1]["url"]
     similar_artists = []
-    for i in range(1, 4):
-        similar_artist = artist[f"similar_artist_{i}"]
-        similar_img = artist["images"][1]["url"]
-        similar_artists.append((similar_artist, similar_img))
+    i = 1
+    while len(similar_artists) < 3 and i < 6:
+        similar_artist_name = artist[f"similar_artist_{i}"]
+        similar_artist = artist_df[artist_df["artist"] == similar_artist_name]
+        if len(similar_artist) > 0:
+            similar_img = similar_artist.iloc[0]["images"][1]["url"]
+            similar_artists.append((similar_artist_name, similar_img))
+        i += 1
     return get_artist_table(curr_img, curr_artist, avg_song_year, genre, num_songs, similar_artists)
