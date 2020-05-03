@@ -24,7 +24,7 @@ fig = px.scatter(
     labels=year_chart_df.apply(lambda row: "f{row['artist']}, {row['title']} ({row['Song Release Year']})", axis=1),
     hover_name="title",
     hover_data=["artist"],
-    title="Top 200 NPO Ranking by Release Year poutsa"
+    title="test test 1-2"
 )
 fig.update_traces( opacity=0.6, marker={"line": {"width": 1, "color": "DarkSlateGrey"}} )
 fig.update_layout(
