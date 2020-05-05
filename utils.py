@@ -51,8 +51,18 @@ def create_era_df(df):
         compare_oldies_df = best_era_df2[best_era_df2["era"] == "oldies"][["variable", "value"]].rename(columns={"value": "value_oldies"})
         best_era_df2 = best_era_df2.merge(compare_oldies_df, how="left", on="variable")
         best_era_df2["relative_to_oldies"] = (best_era_df2["value"] - best_era_df2["value_oldies"]) * 100 / best_era_df2["value_oldies"]
-        best_era_df2["era"] = best_era_df2["era"].map({"oldies": "1920-1980", "90s": "1980-1990", "2000s": "1990-2020"})
+        best_era_df2["era"] = best_era_df2["era"].map({"oldies": "1920-1989", "90s": "1990-1999", "2000s": "2000-2020"})
         best_era_df2 = best_era_df2[["era", "variable", "relative_to_oldies"]].sort_values(["era", "relative_to_oldies"])
         best_era_df2.columns = ["Song Era", "Song Features", "Compared to Oldies (Song Released < 1990)"]
 
         return best_era_df2
+
+def get_max_each_feature(df):
+
+    max_songs={}
+    for feature in song_features:
+        # print(feature)
+        row = df.loc[df[feature].idxmax()]
+        max_songs[feature] = row['title']+ '_'+row['artist']+'_'+row['main_genre']
+    
+    return max_songs
