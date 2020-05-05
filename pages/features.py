@@ -8,7 +8,7 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import generate_table,create_era_df
+from utils import generate_table,create_initial_era_df,create_era_df
 from app import app
 
 # DATA LOADING
@@ -104,6 +104,7 @@ def update_figure_genre(selected_genre, selected_origin,):
     filtered_genre = bill_join_df[bill_join_df['main_genre'] == selected_genre]
     filtered_genre = filtered_genre[filtered_genre['is_dutch'] == selected_origin]
 
+    create_initial_era_df(filtered_genre)
     best_era_df = create_era_df(filtered_genre)
 
     traces = []
