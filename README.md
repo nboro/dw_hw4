@@ -6,5 +6,6 @@ Group Members:
 1. [Nemania Borovits](https://github.com/nboro)
 2. [Yosef Winatmoko](https://github.com/yoseflaw)
 3. [Chris Papas](https://github.com/xristossogr)
-4. [Hameez Ariz](https://github.com/MHameez)       
+4. [Hameez Ariz](https://github.com/MHameez)  
+       
 To view the app go to [dv-hw4.herokuapp.com](https://dv-hw4.herokuapp.com/).    

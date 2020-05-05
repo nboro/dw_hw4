@@ -31,14 +31,14 @@ def create_era_df(df):
         best_era_df = df[df["title"].isin(era_df[era_df["era_rank"] < 200]["title"].unique())].copy()[["title", "era"] + song_features].dropna().reset_index()
         first_title_df = best_era_df[["index", "title"]].groupby("title").rank(method="first")
         best_era_df = best_era_df[first_title_df["index"] == 1]
-        del best_era_df["index"]
-        del best_era_df["title"]
-        best_era_df.columns = [
-            "era", "Duration", "Mainstream", "Loudness", "Tempo",
-            "Danceability", "Energy", "Speechiness", "Instrumentalness",
-            "Liveness", "Valence"
-        ]
-        # all_cols = list(best_era_df.columns.values)
+
+        best_era_df = best_era_df[[
+            'era', 'duration_ms', 'followers',
+       'analysis_loudness', 'analysis_tempo', 'feature_danceability',
+       'feature_energy', 'feature_speechiness', 'feature_instrumentalness',
+       'feature_liveness', 'feature_valence'
+        ]]
+        
         best_era_df = best_era_df.groupby("era").mean().reset_index().melt(id_vars=["era"])
         compare_oldies_df = best_era_df[best_era_df["era"] == "oldies"][["variable", "value"]].rename(columns={"value": "value_oldies"})
         best_era_df = best_era_df.merge(compare_oldies_df, how="left", on="variable")
