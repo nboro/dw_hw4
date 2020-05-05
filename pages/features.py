@@ -13,14 +13,11 @@ from app import app
 
 # DATA LOADING
 
-# with open('data/best_era_df.pkl', 'rb') as input_file:
-#     best_era_df = pickle.load(input_file)
-
 bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
 bill_join_df = bill_join_df.dropna(subset=['main_genre','is_dutch'])
 
 genres = bill_join_df['main_genre'].unique().tolist()
-# genres[1] = 'other'
+
 bill_join_df.is_dutch = bill_join_df.is_dutch.map({True:'Dutch', False:'Non-Dutch'})
 origin_list = bill_join_df.is_dutch.unique().tolist()
 
