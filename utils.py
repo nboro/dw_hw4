@@ -28,10 +28,10 @@ def generate_table(dataframe, max_rows):
 def create_initial_era_df(df):
 
     era_df = df.groupby(["title", "era", "hp"]).count().reset_index()[["title", "era", "hp", "artist"]].rename(columns={"artist": "count"})
-    era_df["era_rank"] = era_df.groupby("era").rank(method="first")["hp"]
+    era_df["era_rank"] = era_df.groupby("era")["hp"].rank(method="first")
     best_era_df = df[df["title"].isin(era_df[era_df["era_rank"] < 200]["title"].unique())].copy()[["title", "era"] + song_features].dropna().reset_index()
-    first_title_df = best_era_df[["index", "title"]].groupby("title").rank(method="first")
-    best_era_df = best_era_df[first_title_df["index"] == 1]
+    first_title_df = best_era_df[["index", "title"]].groupby("title")["index"].rank(method="first")
+    best_era_df = best_era_df[first_title_df == 1]
     del best_era_df["index"]
     del best_era_df["title"]
     best_era_df.columns = [
