@@ -43,7 +43,7 @@ content  = html.Div([
     Output('graph-with-slider', 'figure'),
     [Input('isDutch-dropdown', 'value')])
 def update_figure(selected_isDutch):
-    if selected_genre != "All":
+    if selected_isDutch != "All":
         filtered_year_chart_df = year_chart_df[year_chart_df['Artist Country'] == selected_isDutch]
     else:
         filtered_year_chart_df = year_chart_df
