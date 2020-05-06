@@ -1,11 +1,55 @@
 import dash_html_components as html
+import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import pickle
+import json
 
 song_features = [
     'duration_ms', 'followers', 'analysis_loudness', 'analysis_tempo',
     'feature_danceability', 'feature_energy', 'feature_speechiness', 'feature_instrumentalness', 
     'feature_liveness', 'feature_valence'
 ]
+
+default_graph = {
+    "layout": {
+        "hovermode": "closest",
+        "paper_bgcolor": "#2B3E50",
+        "plot_bgcolor": "#2B3E50",
+        "xaxis": {
+            "color": "#EBEBEB"
+        },
+        "yaxis": {
+            "color": "#EBEBEB"
+        },
+        "legend": {
+            "x": 0.5,
+            "y": -0.2,
+            "xanchor": "center",
+            "yanchor": "top",
+            "orientation": "h"
+        },
+        "font": {
+            "family": "Roboto",
+            "size": 14,
+            "color": "#efdab9"
+        },
+        "colorway": ["#e2cd6d", "#649cc8", "#e86f68"],
+        "hoverlabel": {
+            "font": {
+                "family": "Roboto"
+            }
+        },
+        "margin": {
+            "l": 2,
+            "r": 2,
+            "t": 2,
+            "b": 2
+        },
+    },
+    "config": {
+        "displayModeBar": False
+    }
+}
 
 
 def generate_table(dataframe, max_rows):
@@ -24,6 +68,79 @@ def generate_table(dataframe, max_rows):
             ])
         ], className="table-bordered")
     ], className="table-responsive")
+
+
+def get_song_card(song_id):
+    with open("data/song_card.json", "r") as f_in:
+        songs = json.load(f_in)
+    song_data = songs[song_id]
+    artists = song_data["artists"]
+    title = song_data["title"]
+    genre = song_data["main_genre"]
+    hp = song_data["hp"]
+    song_year = song_data["year"]
+    first_artist_img = song_data["first_artist_img"]
+    card = dbc.Card([
+        dbc.CardHeader([
+            html.H4(html.Strong(title, className="card-title text-info")),
+            html.H6(artists, className="card-subtitle text-muted")
+        ]),
+        dbc.CardBody([
+            html.Img(src=first_artist_img, height=100, alt="Artist Image", className="card-text rounded mx-auto d-block")
+        ]),
+        dbc.CardBody([
+            html.Table([
+                html.Tr([html.Td(html.Strong("Released in", className="text-info")), html.Td(song_year)]),
+                html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)])
+            ])
+        ]),
+        dbc.CardBody([
+            dcc.Graph(
+                figure={
+                    "data": [{
+                        "x": song_data["bill_years"],
+                        "y": song_data["bill_ranks"],
+                        "text": song_data["bill_ranks"],
+                        "mode": "markers+lines",
+                        "marker": {
+                            "color": "#5bc0de"
+                        },
+                        "line": {
+                            "color": "#5bc0de"
+                        }
+                    }],
+                    "layout": {
+                        "hovermode": "closest",
+                        "plot_bgcolor": "#4E5D6C",
+                        "paper_bgcolor": "#4E5D6C",
+                        "xaxis": {
+                            "range": [1998, 2020],
+                            "color": "#EBEBEB",
+                            "showgrid": False,
+                        },
+                        "yaxis": {
+                            "range": [2000, -100],
+                            "zeroline": False,
+                            "color": "#EBEBEB"
+                        },
+                        "margin": {
+                            "l": 2,
+                            "r": 2,
+                            "t": 2,
+                            "b": 2
+                        },
+                        "width": 200,
+                        "height": 100
+                    }
+                },
+                config={
+                    "displayModeBar": False
+                }
+            )
+        ])
+    ], style={"width": "15rem", "border-radius": "5px"})
+    return card
+
 
 def create_initial_era_df(df):
 

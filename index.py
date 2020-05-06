@@ -14,13 +14,8 @@ app.layout = html.Div([
                 dbc.Col(html.H1('Data Visualization - Top 2000 Group 3'),className="text-center"),
             ]
         ),
-        dcc.Link("<< PREV", id="prev-page", href="#"),
-        " | ",
-        dcc.Link("HOME", id="home-page", href="/"),
-        " | ",
-        dcc.Link("NEXT >>", id="next-page", href="#")
     ]),
-    html.Div(id='page-content')
+    html.Div(id='page-content'),
 ])
 
 index = html.Div([
