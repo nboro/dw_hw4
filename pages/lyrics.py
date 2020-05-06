@@ -41,13 +41,8 @@ def get_figure(lang, genres, bill_year, search_input, search_dropdown):
                 "showlegend": m,
                 "marker": {
                     "symbol": "circle",
-                    "size": 10,
-                    "opacity": 0.8 if m else 0.1,
-                    "color": colors[i] if m else "#666666",
-                    # "line": {
-                    #     "width": 1,
-                    #     "color": "DarkSlateGrey"
-                    # }
+                    "size": 8,
+                    "opacity": 1 if m else 0.1
                 },
             }
             if m:
@@ -60,15 +55,19 @@ def get_figure(lang, genres, bill_year, search_input, search_dropdown):
         "data": traces,
         "layout": {
             "hovermode": "closest",
+            "paper_bgcolor": "#2B3E50",
+            "plot_bgcolor": "#2B3E50",
             "xaxis": {
-                # "showgrid": False,
+                "color": "#efdab9",
                 "zeroline": False,
-                # "showticklabels": False
+                "showgrid": False,
+                "showticklabels": False
             },
             "yaxis": {
-                # "showgrid": False,
+                "color": "#efdab9",
                 "zeroline": False,
-                # "showticklabels": False
+                "showgrid": False,
+                "showticklabels": False
             },
             "legend": {
                 "x": 0.5,
@@ -76,6 +75,17 @@ def get_figure(lang, genres, bill_year, search_input, search_dropdown):
                 "xanchor": "center",
                 "yanchor": "top",
                 "orientation": "h"
+            },
+            "font": {
+                "family": "Roboto",
+                "size": 14,
+                "color": "#efdab9"
+            },
+            "colorway": ["#e2cd6d", "#649cc8", "#e86f68"],
+            "hoverlabel": {
+                "font": {
+                    "family": "Roboto"
+                }
             }
         }
     }
@@ -86,7 +96,7 @@ def get_artist_table(title, artists, first_artist_img, genre, song_year, debut_y
     table_components = [
         html.Tr([html.Th(title, colSpan=2, style={"text-align": "center"})]),
         html.Tr([html.Td(f"by {artists}", colSpan=2, style={"text-align": "center"})]),
-        html.Tr([html.Td(html.Img(src=first_artist_img, height=120), colSpan=2, style={"text-align": "center"})]),
+        html.Tr([html.Td(html.Img(src=first_artist_img, height=120, width=120, className="rounded-circle"), colSpan=2, style={"text-align": "center"})]),
         html.Tr([html.Td("Released", style={"text-align": "right"}), html.Td(song_year)]),
         html.Tr([html.Td("Genre", style={"text-align": "right"}), html.Td(genre)]),
         html.Tr([html.Td("First Year in Chart", style={"text-align": "right"}), html.Td(debut_year)]),
@@ -96,7 +106,7 @@ def get_artist_table(title, artists, first_artist_img, genre, song_year, debut_y
     for similar_song in similar_songs:
         table_components += [
             html.Tr([
-                html.Td(html.Img(src=similar_song[0], height=80), style={"text-align": "right"}, rowSpan=2),
+                html.Td(html.Img(src=similar_song[0], height=60, width=60, className="rounded-circle"), style={"text-align": "right"}, rowSpan=2),
                 html.Td(f"{similar_song[1]} ({similar_song[2]}%)")
             ]),
             html.Tr([
