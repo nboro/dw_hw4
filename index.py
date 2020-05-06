@@ -11,8 +11,7 @@ app.layout = html.Div([
     html.Div(children=[
         dbc.Row(
             [
-                dbc.Col(html.H2('Data Visualization - Top 2000 Group 3'),className="text-center",
-                style={'text-decoration':'underline'}),
+                dbc.Col(html.H1('Data Visualization - Top 2000 Group 3'),className="text-center"),
             ]
         ),
         dcc.Link("<< PREV", id="prev-page", href="#"),

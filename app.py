@@ -3,9 +3,9 @@ import dash_bootstrap_components as dbc
 
 app = dash.Dash(
     __name__,
+    external_stylesheets=[dbc.themes.SUPERHERO],
     meta_tags=[{'name': 'viewport', 'content': 'width=device-width'}],
-    external_stylesheets=[dbc.themes.BOOTSTRAP]
 )
 
-app.title = 'HW4 Data Visualization Group3 | Top 2000 Dataset'
+app.title = 'Bloghemian Rhapsody'
 app.config.suppress_callback_exceptions = True
