@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from app import app
@@ -11,7 +12,7 @@ top_df = bill_join_df[bill_join_df["bill_rank"] <= 200][["artist", "title", "yea
 top_df["bill_year_w_jitter"] = top_df["bill_year"].apply(lambda y: y + np.random.normal(0, 0.1))
 
 year_chart_df = top_df.rename(columns={"year": "Song Release Year", "bill_year_w_jitter": "Ranking Year", "is_dutch": "Artist Country"})
-year_chart_df['main_genre'] = year_chart_df['main_genre'].map({'rock': 'rock', 'pop': 'pop','reggae':'other','soul':'other','folk':'other','hip hop':'other','metal':'other','house':'other','disco':'other','others':'other'})
+year_chart_df['main_genre'] = year_chart_df['main_genre'].apply(lambda g: g if g in ["rock", "pop"] else "others")
 genre_list = year_chart_df["main_genre"].unique().tolist()
 genre_list.append("All")
 
@@ -23,34 +24,91 @@ bill_rank_list = year_chart_df["bill_rank"].sort_values().unique().tolist()
 
 content = html.Div([
 
-    html.H2(children="Header",
-            style={'textAlign': 'center',
-                   #                  'color': layout_colors['text'],
-                   #                  'backgroundColor': layout_colors['background']
-                   }),
-    html.Div(
-        [
-            dcc.Graph(id='graph-with-slider',style={'width': 1600}),
+    dbc.Row([
+        dbc.Col(html.Div([
+            html.H2("Release year of top-200 songs")
+        ]),className="text-center"),
+    ]),
 
-            dcc.Dropdown(
-                id='isDutch-dropdown',
-                options=[{'label': key, 'value': key} for key in isDutch_list],
-                value='All'
-            ),
+    dbc.Row([
 
-            dcc.Slider(
-                id='rank-slider',
-                min=10,
-                max=200,
-                value=200,
-                marks={str(pos): str(pos) for pos in range(10,211,20)},
-                step=10
-            ),
+                dbc.Col(html.Div([
+                    dcc.Graph(id='graph-with-slider',style={'width': '100%'}),
 
-        ],
-        style={'width': '50%',
-               'display': 'inline-block'}),
-])
+                    dbc.Row([
+                        dbc.Col(html.Div([
+                            html.H6("Filter by top k songs")
+                        ]), className="text-center", ),
+
+
+                    ]),
+
+                    dcc.Slider(
+                            id='rank-slider',
+                            min=10,
+                            max=200,
+                            value=200,
+                            marks={str(pos): str(pos) for pos in range(10,201,10)},
+                            step=10,
+
+                    ),
+
+                ])),
+
+
+                dbc.Col(html.Div([
+                    dcc.Dropdown(
+                        id='isDutch-dropdown',
+                        options=[{'label': key, 'value': key} for key in isDutch_list],
+                        value='All')
+                ]),width={"size":3,"order":2,"offset": 0}),
+    ]),
+
+    # dbc.Row(
+    #     [
+    #         dbc.Col(html.Div(children=[
+    #                     dcc.Slider(
+    #                         id='rank-slider',
+    #                         min=10,
+    #                         max=200,
+    #                         value=200,
+    #                         marks={str(pos): str(pos) for pos in range(10,211,20)},
+    #                         step=10,
+    #
+    #                     ),
+    #         ])),
+    #         dbc.Col(id='feature_text', width="auto", align="center")
+    #     ],
+    #     justify="center",
+    # )
+    ],
+    style={'margin-top':'20px'}),
+
+
+    # html.Div(
+    #     [
+    #         dcc.Graph(id='graph-with-slider',style={'width': '70%'}),
+    #
+    #         dcc.Dropdown(
+    #             id='isDutch-dropdown',
+    #             options=[{'label': key, 'value': key} for key in isDutch_list],
+    #             value='All'
+    #         ),
+    #
+    #         dcc.Slider(
+    #             id='rank-slider',
+    #             min=10,
+    #             max=200,
+    #             value=200,
+    #             marks={str(pos): str(pos) for pos in range(10,211,20)},
+    #             step=10,
+    #
+    #         ),
+    #
+    #     ],
+    #     style={'width': '100%',
+    #            'display': 'inline-block'}),
+# ])
 
 
 @app.callback(
