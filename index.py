@@ -34,7 +34,7 @@ index = html.Div([
 
 
 @app.callback(
-    [Output('page-content', 'children')],
+    Output('page-content', 'children'),
     [Input('url', 'pathname')]
 )
 def display_page(pathname):
