@@ -47,6 +47,41 @@ def get_graph_template():
     }
 
 
+def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
+    buttons = []
+    if prev_icon:
+        buttons.append(
+            dcc.Link(
+                dbc.Button(
+                    html.Span(
+                        className=f"oi {prev_icon}",
+                        title="Prev"
+                    ),
+                    color="light",
+                    size="sm"
+                ),
+                id="prev-page",
+                href=prev_url
+            )
+        )
+    if next_icon:
+        buttons.append(
+            dcc.Link(
+                dbc.Button(
+                    html.Span(
+                        className=f"oi {next_icon}",
+                        title="Next"
+                    ),
+                    color="success",
+                    size="sm"
+                ),
+                id="next-page",
+                href=next_url
+            )
+        )
+    return dbc.ButtonGroup(buttons) if len(buttons) > 0 else ""
+
+
 def generate_table(dataframe, max_rows):
 
     """ A function which returns a responsive html table provided a dataframe """
@@ -79,7 +114,7 @@ def get_song_card(song_id):
     valid_idx = [i for i, r in enumerate(song_data["bill_ranks"]) if r <= 200]
     card = dbc.Card([
         dbc.CardHeader([
-            html.H3(html.Strong(title, className="card-title text-info")),
+            html.H4(html.Strong(title, className="card-title text-info")),
             html.H6(artists, className="card-subtitle text-muted")
         ]),
         dbc.CardBody([

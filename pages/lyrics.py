@@ -57,7 +57,11 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
                 "marker": {
                     "symbol": "circle",
                     "size": 8,
-                    "opacity": 1 if m else 0.1
+                    "opacity": 1 if m else 0.1,
+                    "line": {
+                        "width": 0.5,
+                        "color": "#2B3E50"
+                    }
                 },
             }
             if m:
@@ -88,11 +92,11 @@ def get_similar_songs(song_id):
 
 
 # CONTENTS
-body_container = [
+content = [
     dbc.Row([
         dbc.Col([
             dbc.FormGroup([
-                dbc.Label("Language"),
+                dbc.Label("Language:"),
                 dbc.Select(
                     id="language-dropdown",
                     options=[{"label": "English", "value": "en"}, {"label": "Dutch", "value": "nl"}],
@@ -102,7 +106,7 @@ body_container = [
         ], width=4),
         dbc.Col([
             dbc.FormGroup([
-                dbc.Label("Genre"),
+                dbc.Label("Genre:"),
                 dbc.Select(
                     id="genre-dropdown",
                     options=[
@@ -117,7 +121,7 @@ body_container = [
         ], width=4),
         dbc.Col([
             dbc.FormGroup([
-                dbc.Label("Search"),
+                dbc.Label("Search:"),
                 dbc.Input(
                     id="search-input",
                     value="",
@@ -140,40 +144,37 @@ body_container = [
     dbc.Row([
         dbc.Col([
             dcc.Graph(
-                id="fig",
+                id="lyric-fig",
                 figure=get_figure("en", ["rock", "pop", "other"], 1999, "", "all"),
                 config=graph_settings["config"]
             )
         ], width=12)
     ]),
-    dcc.Slider(
-        id='ranking-year-slider',
-        min=1999,
-        max=2019,
-        value=1999,
-        marks={str(year): str(year) for year in range(1999, 2020)},
-        step=None,
-        className="custom-range"
-    )
+    dbc.Row([
+        dbc.Col([
+            dbc.Label(children="Ranking Year:"),
+            dcc.Slider(
+                id='ranking-year-slider',
+                min=1999,
+                max=2019,
+                value=1999,
+                marks={str(year): str(year) for year in range(1999, 2020)},
+                step=None,
+                className="custom-range"
+            )
+        ]),
+    ])
 ]
 
 
-description = html.Div(id="detail", children="Description")
+title = "The Lyric Constellation"
 
-
-content = dbc.Container([
-    dbc.Row([
-        dbc.Col(body_container, width=9),
-        dbc.Col([
-            dbc.Row(children=description)
-        ], width=3)
-    ])
-], fluid=True)
+description = html.Div(id="lyric-description", children="Click an artist")
 
 
 # CALLBACKS
 @app.callback(
-    Output("fig", "figure"),
+    Output("lyric-fig", "figure"),
     [
         Input("language-dropdown", "value"),
         Input("genre-dropdown", "value"),
@@ -186,7 +187,7 @@ def display_figure(lang, genres, ranking_year, search_input, search_radio):
     return get_figure(lang, genres, ranking_year, search_input, search_radio)
 
 
-@app.callback(Output("detail", "children"), [Input("fig", "clickData")])
+@app.callback(Output("lyric-description", "children"), [Input("lyric-fig", "clickData")])
 def display_artist_info(click_data):
     if click_data is None or "text" not in click_data["points"][0]:
         return [html.Div("Click an artist")]

@@ -1,0 +1,36 @@
+.rc-slider-rail {
+	background-color: #abb6c2;
+	height: 5px;
+}
+
+.rc-slider-track {
+	background-color: #DF691A;
+	height: 5px;
+}
+
+.rc-slider-handle {
+    border: solid 4px #DF691A;
+    background-color: #DF691A;
+}
+
+.rc-slider-dot {
+    border: solid 2px #EBEBEB;
+    background-color: #EBEBEB;
+}
+
+.rc-slider-dot-active {
+    border: solid 1px #DF691A;
+    background-color: #DF691A
+}
+
+.rc-slider-mark-text {
+    color: #abb6c2;
+}
+
+.rc-slider-mark-text-active {
+    color: #EBEBEB;
+}
+
+.icon-orange {
+  fill: #DF691A;
+}
