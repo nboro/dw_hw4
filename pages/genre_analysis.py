@@ -7,16 +7,20 @@ from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+from utils import get_graph_template
 
 from app import app
 # load data
 sample_set = pd.read_csv("data/genre_analysis.csv")
 # Set color for Era's
 available_eras = list(sample_set['era'].unique())
-era_colors = ["#ff1100", "#16c1c4", "#26b812"]
-era_col = dict(zip(available_eras, era_colors))
+era_col = {
+    "oldies": "#f0ad4e",
+    "90s": "#5bc0de",
+    "2000s": "#d9534f"
+}
 
-fig = make_subplots(rows=1, cols=3, subplot_titles=('Genre: Pop', 'Genre: Rock', 'Genre: Other'))
+fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Genre: Pop', 'Genre: Rock', 'Genre: Other'))
 
 
 def grouped_df(value):
@@ -28,32 +32,58 @@ def grouped_df(value):
 def group_titles():
     pop_specific = grouped_df('pop')
     i = 1
-    for genree in ['pop', 'rock', 'other']:
+    legend_names = set()
+    for genree in ['rock', 'pop', 'other']:
         specific = grouped_df(genree)
         for namex, group in specific.groupby('title'):
             era = group.era[0]
-            line_color = era_col.get(str(group.era[0]))
+            line_color = era_col.get(str(era))
             fig.add_trace(go.Scatter(x=list(group.bill_year),
                                      y=list(group.bill_ranking),
-                                     name=group.era[0],
+                                     legendgroup=era,
+                                     name=era,
                                      visible=True, text=namex,
-                                     line=dict(color=line_color), showlegend=True,
+                                     line=dict(width=1, color=line_color), showlegend=era not in legend_names,
                                      mode='lines+markers', hoverinfo='x+y+text+name'),
                           row=1, col=i)
+            legend_names.add(era)
         i += 1
 
 
-fig.update_yaxes(autorange="reversed")
-
-fig.update_layout(xaxis_range=[1999, 2020])
-
-fig.update_layout(
-    hoverlabel=dict(
-        bgcolor="white",
-        font_size=16,
-        font_family="Rockwell"
-    )
+# get template
+graph_settings = get_graph_template()
+graph_settings["layout"]["margin"]["t"] = 50
+fig.update_layout(graph_settings["layout"])
+fig.update_xaxes(
+    range=[1998, 2020],
+    color="#EBEBEB",
+    showgrid=False,
+    automargin=True,
+    tickmode="array",
+    tickvals=[2000, 2010, 2020]
 )
+fig.update_yaxes(
+    autorange="reversed",
+    color="#EBEBEB",
+    gridcolor="#4E5D6C",
+    automargin=True,
+    zeroline=False,
+    tickmode="array",
+    tickvals=[50, 250, 500, 1000, 2000]
+)
+# fig.update_yaxes(graph_settings["layout"]["yaxis"])
+
+# fig.update_yaxes(autorange="reversed")
+#
+# fig.update_layout(xaxis_range=[1999, 2020])
+#
+# fig.update_layout(
+#     hoverlabel=dict(
+#         bgcolor="white",
+#         font_size=16,
+#         font_family="Rockwell"
+#     )
+# )
 
 group_titles()
 # specific = sample_set.groupby('title_index').apply(pd.DataFrame.sort_values, 'bill_year', ascending=True)
@@ -90,7 +120,7 @@ group_titles()
 # fig.update_layout(xaxis_range=[2000,2020])
 
 content = html.Div([
-    dcc.Graph(figure=fig)
+    dcc.Graph(figure=fig, config=graph_settings["config"])
 ])
 # available_genres = list(sample_set['genre'].unique())
 # colors = ["#316fd4","#ed72e9","#4287f5","#4287f5","#b07633"]

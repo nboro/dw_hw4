@@ -28,7 +28,7 @@ def get_graph_template():
             "font": {
                 "family": "Roboto",
                 "size": 14,
-                "color": "#efdab9"
+                "color": "#EBEBEB"
             },
             "colorway": ["#f0ad4e", "#5bc0de", "#d9534f"],
             "hoverlabel": {
@@ -158,7 +158,7 @@ def get_song_card(song_id):
                         "font": {
                             "family": "Roboto",
                             "size": 12,
-                            "color": "#efdab9"
+                            "color": "#EBEBEB"
                         },
                         "margin": {
                             "l": 2,
