@@ -57,6 +57,7 @@ def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
                         className=f"oi {prev_icon}",
                         title="Prev"
                     ),
+                    outline=True,
                     color="light",
                     size="sm"
                 ),
@@ -72,7 +73,8 @@ def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
                         className=f"oi {next_icon}",
                         title="Next"
                     ),
-                    color="success",
+                    outline=True,
+                    color="primary",
                     size="sm"
                 ),
                 id="next-page",
