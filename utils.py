@@ -18,10 +18,12 @@ def get_graph_template():
             "paper_bgcolor": "#2B3E50",
             "plot_bgcolor": "#2B3E50",
             "xaxis": {
-                "color": "#EBEBEB"
+                "color": "#EBEBEB",
+                "automargin": True
             },
             "yaxis": {
-                "color": "#EBEBEB"
+                "color": "#EBEBEB",
+                "automargin": True
             },
             "legend": {
                 "x": 0.5,
@@ -35,17 +37,15 @@ def get_graph_template():
                 "size": 14,
                 "color": "#efdab9"
             },
-            "colorway": ["#e2cd6d", "#649cc8", "#e86f68"],
+            "colorway": ["#f0ad4e", "#5bc0de", "#d9534f"],
             "hoverlabel": {
                 "font": {
                     "family": "Roboto"
                 }
             },
             "margin": {
-                "l": 2,
                 "r": 2,
-                "t": 2,
-                "b": 2
+                "t": 2
             },
         },
         "config": {
@@ -80,11 +80,13 @@ def get_song_card(song_id):
     title = song_data["title"]
     genre = song_data["main_genre"]
     hp = song_data["hp"]
+    hp_idx = song_data["bill_ranks"].index(hp)
     song_year = song_data["year"]
     first_artist_img = song_data["first_artist_img"]
+    valid_idx = [i for i, r in enumerate(song_data["bill_ranks"]) if r <= 200]
     card = dbc.Card([
         dbc.CardHeader([
-            html.H4(html.Strong(title, className="card-title text-info")),
+            html.H3(html.Strong(title, className="card-title text-info")),
             html.H6(artists, className="card-subtitle text-muted")
         ]),
         dbc.CardBody([
@@ -93,37 +95,75 @@ def get_song_card(song_id):
         dbc.CardBody([
             html.Table([
                 html.Tr([html.Td(html.Strong("Released in", className="text-info")), html.Td(song_year)]),
-                html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)])
-            ])
-        ]),
-        dbc.CardBody([
+                html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
+                html.Tr([html.Td(html.Strong("Positions", className="text-info")), html.Td()])
+            ]),
             dcc.Graph(
                 figure={
                     "data": [{
-                        "x": song_data["bill_years"],
-                        "y": song_data["bill_ranks"],
-                        "text": song_data["bill_ranks"],
-                        "mode": "markers+lines",
+                        "x": [song_data["bill_years"][i] if i in valid_idx else None for i in
+                              range(len( song_data["bill_years"]))],
+                        "y": [song_data["bill_ranks"][i] if i in valid_idx else None for i in
+                              range(len(song_data["bill_ranks"]))],
+                        "hoverinfo": "skip",
+                        "mode": "line",
+                        "line": {
+                            "color": "#5bc0de",
+                            "width": 1
+                        }
+                    }, {
+                        "name": "",
+                        "x": [song_data["bill_years"][i] if i != hp_idx else None for i in valid_idx],
+                        "y": [song_data["bill_ranks"][i] if i != hp_idx else None for i in valid_idx],
+                        "customdata": [
+                            (song_data["bill_ranks"][i], song_data["bill_years"][i]) if i != hp_idx else None for i in
+                            valid_idx
+                        ],
+                        "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
+                        "mode": "markers",
                         "marker": {
                             "color": "#5bc0de"
-                        },
-                        "line": {
-                            "color": "#5bc0de"
+                        }
+                    }, {
+                        "name": "",
+                        "x": [song_data["bill_years"][hp_idx]],
+                        "y": [song_data["bill_ranks"][hp_idx]],
+                        "text": [song_data["bill_ranks"][hp_idx]],
+                        "customdata": [(song_data["bill_ranks"][hp_idx], song_data["bill_years"][hp_idx])],
+                        "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
+                        "mode": "markers+text",
+                        "textposition": "top-center",
+                        "marker": {
+                            "color": "#DF691A"
                         }
                     }],
                     "layout": {
                         "hovermode": "closest",
                         "plot_bgcolor": "#4E5D6C",
                         "paper_bgcolor": "#4E5D6C",
+                        "showlegend": False,
                         "xaxis": {
                             "range": [1998, 2020],
                             "color": "#EBEBEB",
                             "showgrid": False,
+                            "automargin": True,
+                            "tickmode": "array",
+                            "tickvals": [2000, 2010, 2020],
+                            "ticktext": ["'00", "'10", "'20"]
                         },
                         "yaxis": {
-                            "range": [2000, -100],
+                            "range": [205, -30],
+                            "color": "#EBEBEB",
+                            "automargin": True,
                             "zeroline": False,
-                            "color": "#EBEBEB"
+                            "tickmode": "array",
+                            "tickprefix": "Top-",
+                            "tickvals": [10, 50, 100, 200]
+                        },
+                        "font": {
+                            "family": "Roboto",
+                            "size": 12,
+                            "color": "#efdab9"
                         },
                         "margin": {
                             "l": 2,
@@ -131,16 +171,16 @@ def get_song_card(song_id):
                             "t": 2,
                             "b": 2
                         },
-                        "width": 200,
-                        "height": 100
+                        "width": 240,
+                        "height": 180
                     }
                 },
                 config={
                     "displayModeBar": False
                 }
             )
-        ])
-    ], style={"width": "15rem", "border-radius": "5px"})
+        ]),
+    ], style={"width": "18rem", "border-radius": "5px"})
     return card
 
 

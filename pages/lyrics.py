@@ -131,11 +131,15 @@ body_container = [
             ])
         ], width=4)
     ]),
-    dcc.Graph(
-        id="fig",
-        figure=get_figure("en", ["rock", "pop", "other"], 1999, "", "all"),
-        config=graph_settings["config"]
-    ),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(
+                id="fig",
+                figure=get_figure("en", ["rock", "pop", "other"], 1999, "", "all"),
+                config=graph_settings["config"]
+            )
+        ], width=12)
+    ]),
     dcc.Slider(
         id='ranking-year-slider',
         min=1999,
