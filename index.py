@@ -34,24 +34,24 @@ index = html.Div([
 
 
 @app.callback(
-    [Output('page-content', 'children'), Output('prev-page', 'href'), Output('next-page', 'href')],
+    [Output('page-content', 'children')],
     [Input('url', 'pathname')]
 )
 def display_page(pathname):
     if pathname == "/":
-        return index, "/lyrics", "/scatter"
+        return index
     elif pathname == "/scatter":
-        return scatter.content, "/", "/genres"
+        return scatter.content
     # elif pathname == "/genres":
     #     return genres.content, "/scatter", "/eras"
     elif pathname == "/genres":
-        return genre_analysis.content, "/scatter", "/features"
+        return genre_analysis.content
     # elif pathname == "/eras":
     #     return eras.content, "/genres", "/features"
     elif pathname == "/features":
-        return features.content, "/genres", "/lyrics"
+        return features.content
     elif pathname == "/lyrics":
-        return lyrics.content, "/features", "/"
+        return lyrics.content
     return "404"
 
 
