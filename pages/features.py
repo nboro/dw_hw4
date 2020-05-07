@@ -18,6 +18,7 @@ graph_settings["layout"]["xaxis"]["showgrid"] = False
 graph_settings["layout"]["xaxis"]["dtick"] = 25
 graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
 graph_settings["layout"]["yaxis"]["title"] = "Song Features"
+graph_settings["layout"]["margin"]["l"] = 140
 
 
 # DATA LOADING
