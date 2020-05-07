@@ -6,42 +6,88 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
+from plotly.subplots import make_subplots
 
 from app import app
 # load data
-sample_set = pd.read_csv("data/genre_analysis_set.csv")
-specific = sample_set.groupby('title_index').apply(pd.DataFrame.sort_values, 'bill_year', ascending=True)
-specific = specific.rename(
-    columns={
-        "bill_year": "Ranking Year",
-        "genre": "Genre",
-        "bill_ranking": "Ranking",
-        "release_year": "Released Year",
-        "artist": "Artist",
-        "title": "Title",
-        "era": "Released Era"
-    }
-)
-fig = px.line(
-    specific,
-    x="Ranking Year",
-    y="Ranking",
-    color="Released Era",
-    line_group="Title",
-    template="simple_white",
-    facet_col="Genre",
-    hover_name="Title",
-    hover_data=["Artist", "Released Year"],
-    title="Journeys of Top 10 most popular by Genre")
+sample_set = pd.read_csv("data/genre_analysis.csv")
+# Set color for Era's
+available_eras = list(sample_set['era'].unique())
+era_colors = ["#ff1100", "#16c1c4", "#26b812"]
+era_col = dict(zip(available_eras, era_colors))
 
-fig.update_traces(
-    mode="markers+lines",
-    marker={
-        "line": {"width": 0.5, "color": "DarkSlateGrey"}
-    }
-)
+fig = make_subplots(rows=1, cols=3, subplot_titles=('Genre: Pop', 'Genre: Rock', 'Genre: Other'))
+
+
+def grouped_df(value):
+    specific = sample_set.loc[sample_set['genre'] == value]
+    specific = specific.groupby('title_index').apply(pd.DataFrame.sort_values, 'bill_year', ascending=True)
+    return specific
+
+
+def group_titles():
+    pop_specific = grouped_df('pop')
+    i = 1
+    for genree in ['pop', 'rock', 'other']:
+        specific = grouped_df(genree)
+        for namex, group in specific.groupby('title'):
+            era = group.era[0]
+            line_color = era_col.get(str(group.era[0]))
+            fig.add_trace(go.Scatter(x=list(group.bill_year),
+                                     y=list(group.bill_ranking),
+                                     name=group.era[0],
+                                     visible=True, text=namex,
+                                     line=dict(color=line_color), showlegend=True,
+                                     mode='lines+markers', hoverinfo='x+y+text+name'),
+                          row=1, col=i)
+        i += 1
+
+
 fig.update_yaxes(autorange="reversed")
-fig.update_layout(xaxis_range=[2000,2020])
+
+fig.update_layout(xaxis_range=[1999, 2020])
+
+fig.update_layout(
+    hoverlabel=dict(
+        bgcolor="white",
+        font_size=16,
+        font_family="Rockwell"
+    )
+)
+
+group_titles()
+# specific = sample_set.groupby('title_index').apply(pd.DataFrame.sort_values, 'bill_year', ascending=True)
+# specific = specific.rename(
+#     columns={
+#         "bill_year": "Ranking Year",
+#         "genre": "Genre",
+#         "bill_ranking": "Ranking",
+#         "release_year": "Released Year",
+#         "artist": "Artist",
+#         "title": "Title",
+#         "era": "Released Era"
+#     }
+# )
+# fig = px.line(
+#     specific,
+#     x="Ranking Year",
+#     y="Ranking",
+#     color="Released Era",
+#     line_group="Title",
+#     template="simple_white",
+#     facet_col="Genre",
+#     hover_name="Title",
+#     hover_data=["Artist", "Released Year"],
+#     title="Journeys of Top 10 most popular by Genre")
+#
+# fig.update_traces(
+#     mode="markers+lines",
+#     marker={
+#         "line": {"width": 0.5, "color": "DarkSlateGrey"}
+#     }
+# )
+# fig.update_yaxes(autorange="reversed")
+# fig.update_layout(xaxis_range=[2000,2020])
 
 content = html.Div([
     dcc.Graph(figure=fig)
