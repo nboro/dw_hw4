@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 
 from app import app
-from pages import scatter, genres, eras, features, lyrics, genre_analysis
+from pages import scatter, genre_analysis, features, lyrics
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -23,10 +23,10 @@ index = html.Div([
     html.Br(),
     # dcc.Link('Genres', href='/genres'),
     # html.Br(),
-    dcc.Link('Genres', href='/genre_analysis'),
+    dcc.Link('Genres', href='/genres'),
     html.Br(),
-    dcc.Link('Era Features', href='/eras'),
-    html.Br(),
+    # dcc.Link('Era Features', href='/eras'),
+    # html.Br(),
     dcc.Link('Song Features', href='/features'),
     html.Br(),
     dcc.Link('Lyrics', href='/lyrics')
@@ -44,12 +44,12 @@ def display_page(pathname):
         return scatter.content, "/", "/genres"
     # elif pathname == "/genres":
     #     return genres.content, "/scatter", "/eras"
-    elif pathname == "/genre_analysis":
-        return genre_analysis.content, "/scatter", "/eras"
-    elif pathname == "/eras":
-        return eras.content, "/genres", "/features"
+    elif pathname == "/genres":
+        return genre_analysis.content, "/scatter", "/features"
+    # elif pathname == "/eras":
+    #     return eras.content, "/genres", "/features"
     elif pathname == "/features":
-        return features.content, "/eras", "/lyrics"
+        return features.content, "/genres", "/lyrics"
     elif pathname == "/lyrics":
         return lyrics.content, "/features", "/"
     return "404"

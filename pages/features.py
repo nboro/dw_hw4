@@ -8,8 +8,17 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import generate_table,create_initial_era_df,create_era_df,get_max_each_feature
+from utils import generate_table,create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template
 from app import app
+
+
+# SETUP LAYOUT AND CONFIG
+graph_settings = get_graph_template()
+graph_settings["layout"]["xaxis"]["showgrid"] = False
+graph_settings["layout"]["xaxis"]["dtick"] = 25
+graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
+graph_settings["layout"]["yaxis"]["title"] = "Song Features"
+
 
 # DATA LOADING
 
@@ -50,7 +59,7 @@ features_max = get_max_each_feature(bill_join_df)
 color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
 
 def add_tags(tag, word):
-	return "<%s>%s</%s>" % (tag, word, tag)
+    return "<%s>%s</%s>" % (tag, word, tag)
 
 # CONTENT
 content = html.Div(
@@ -86,7 +95,7 @@ content = html.Div(
                 dbc.Col(html.Div(children=[
                     dcc.Graph(
                         id='song-feature-99',
-                        config=dict(responsive=True),
+                        config=graph_settings["config"],
                         # figure = fig
                     ),
                 ]),width="auto"),
@@ -132,7 +141,7 @@ def set_genre(available_options):
         Input('dutch', 'value')
     ])
 def update_figure_genre(selected_genre, selected_origin):
-    
+
     filtered_genre = bill_join_df[bill_join_df['main_genre'] == selected_genre]
     filtered_genre = filtered_genre[filtered_genre['is_dutch'] == selected_origin]
 
@@ -150,8 +159,8 @@ def update_figure_genre(selected_genre, selected_origin):
             # color=,
             opacity=0.7,
             marker=dict(
-                line_width=1, 
-                symbol='circle', 
+                line_width=1,
+                symbol='circle',
                 size=16,
                 color= color_sequence[np.where(best_era_df['Song Era'].unique() == i)[0][0]]
             ),
@@ -160,33 +169,34 @@ def update_figure_genre(selected_genre, selected_origin):
 
     return {
         'data': traces,
-        'layout': dict(
-            # title = 'Comparing Features of Different Song Eras (based on Spotify API)',
-            xaxis=dict(
-                title = '',
-                showgrid=False,
-                showline=True,
-                linecolor='rgb(102, 102, 102)',
-                tickfont_color='rgb(102, 102, 102)',
-                showticklabels=True,
-                dtick=25,
-                ticks='outside',
-                tickcolor='rgb(102, 102, 102)',
-                ticksuffix='%'
-            ),
-            yaxis=dict(title='Song features'),
-            margin=dict(l=140, r=0, b=50, t=80),
-            legend=dict(
-                font_size=10,
-                yanchor='middle',
-                xanchor='right',
-            ),
-            paper_bgcolor='white',
-            plot_bgcolor='white',
-            hovermode='closest',
-            width=1024,
-            height=760,
-        )
+        'layout': graph_settings["layout"]
+        # 'layout': dict(
+        #     # title = 'Comparing Features of Different Song Eras (based on Spotify API)',
+        #     xaxis=dict(
+        #         title = '',
+        #         showgrid=False,
+        #         showline=True,
+        #         linecolor='rgb(102, 102, 102)',
+        #         tickfont_color='rgb(102, 102, 102)',
+        #         showticklabels=True,
+        #         dtick=25,
+        #         ticks='outside',
+        #         tickcolor='rgb(102, 102, 102)',
+        #         ticksuffix='%'
+        #     ),
+        #     yaxis=dict(title='Song features'),
+        #     margin=dict(l=140, r=0, b=50, t=80),
+        #     legend=dict(
+        #         font_size=10,
+        #         yanchor='middle',
+        #         xanchor='right',
+        #     ),
+        #     paper_bgcolor='white',
+        #     plot_bgcolor='white',
+        #     hovermode='closest',
+        #     width=1024,
+        #     height=760,
+        # )
     }
 
 @app.callback(
@@ -215,4 +225,3 @@ def display_feature_text(clickData):
         return html.Div(children=[
             table,table2
         ], className="table-responsive")
-        

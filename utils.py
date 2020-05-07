@@ -10,46 +10,48 @@ song_features = [
     'feature_liveness', 'feature_valence'
 ]
 
-default_graph = {
-    "layout": {
-        "hovermode": "closest",
-        "paper_bgcolor": "#2B3E50",
-        "plot_bgcolor": "#2B3E50",
-        "xaxis": {
-            "color": "#EBEBEB"
-        },
-        "yaxis": {
-            "color": "#EBEBEB"
-        },
-        "legend": {
-            "x": 0.5,
-            "y": -0.2,
-            "xanchor": "center",
-            "yanchor": "top",
-            "orientation": "h"
-        },
-        "font": {
-            "family": "Roboto",
-            "size": 14,
-            "color": "#efdab9"
-        },
-        "colorway": ["#e2cd6d", "#649cc8", "#e86f68"],
-        "hoverlabel": {
+
+def get_graph_template():
+    return {
+        "layout": {
+            "hovermode": "closest",
+            "paper_bgcolor": "#2B3E50",
+            "plot_bgcolor": "#2B3E50",
+            "xaxis": {
+                "color": "#EBEBEB"
+            },
+            "yaxis": {
+                "color": "#EBEBEB"
+            },
+            "legend": {
+                "x": 0.5,
+                "y": -0.2,
+                "xanchor": "center",
+                "yanchor": "top",
+                "orientation": "h"
+            },
             "font": {
-                "family": "Roboto"
-            }
+                "family": "Roboto",
+                "size": 14,
+                "color": "#efdab9"
+            },
+            "colorway": ["#e2cd6d", "#649cc8", "#e86f68"],
+            "hoverlabel": {
+                "font": {
+                    "family": "Roboto"
+                }
+            },
+            "margin": {
+                "l": 2,
+                "r": 2,
+                "t": 2,
+                "b": 2
+            },
         },
-        "margin": {
-            "l": 2,
-            "r": 2,
-            "t": 2,
-            "b": 2
-        },
-    },
-    "config": {
-        "displayModeBar": False
+        "config": {
+            "displayModeBar": False
+        }
     }
-}
 
 
 def generate_table(dataframe, max_rows):

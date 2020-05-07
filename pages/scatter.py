@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+from utils import get_graph_template
 from app import app
 
 bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
@@ -22,6 +23,13 @@ isDutch_list.append("All")
 
 bill_rank_list = year_chart_df["bill_rank"].sort_values().unique().tolist()
 
+graph_settings = get_graph_template()
+graph_settings["layout"]["xaxis"]["title"] = "Ranking Year"
+graph_settings["layout"]["xaxis"]["range"] = [1998, 2020]
+graph_settings["layout"]["yaxis"]["title"] = "Song Release Year"
+graph_settings["layout"]["yaxis"]["range"] = [1955, 2020]
+
+
 content = html.Div([
 
     dbc.Row([
@@ -33,7 +41,7 @@ content = html.Div([
     dbc.Row([
 
                 dbc.Col(html.Div([
-                    dcc.Graph(id='graph-with-slider',style={'width': '100%'}),
+                    dcc.Graph(id='graph-with-slider'),
 
                     dbc.Row([
                         dbc.Col(html.Div([
@@ -144,12 +152,13 @@ def update_figure(selected_isDutch, bill_rank_lista):
 
     return {
         'data': traces,
-        'layout': dict(
-            xaxis={'title': 'Ranking Year',
-                   'range':[1998, 2020]},
-            yaxis={'title': 'Song Release Year', 'range': [1955, 2020]},
-            margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
-            legend={'x': 0, 'y': 1},
-            hovermode='closest',
-        )
+        'layout': graph_settings["layout"]
+        # 'layout': dict(
+        #     xaxis={'title': 'Ranking Year',
+        #            'range':[1998, 2020]},
+        #     yaxis={'title': 'Song Release Year', 'range': [1955, 2020]},
+        #     margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+        #     legend={'x': 0, 'y': 1},
+        #     hovermode='closest',
+        # )
     }

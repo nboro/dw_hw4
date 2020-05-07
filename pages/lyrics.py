@@ -5,7 +5,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
-from utils import default_graph, get_song_card
+from utils import get_graph_template, get_song_card
 
 from app import app
 
@@ -15,7 +15,7 @@ with open(f"data/lyric.json", "r") as f:
 
 
 # TEMPLATE SETTINGS
-graph_settings = default_graph.copy()
+graph_settings = get_graph_template()
 graph_settings["layout"]["xaxis"]["zeroline"] = False
 graph_settings["layout"]["yaxis"]["zeroline"] = False
 
