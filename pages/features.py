@@ -18,8 +18,11 @@ graph_settings["layout"]["xaxis"]["showgrid"] = False
 graph_settings["layout"]["xaxis"]["dtick"] = 25
 graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
 graph_settings["layout"]["yaxis"]["title"] = "Song Features"
-graph_settings["layout"]["margin"]["l"] = 140
-
+graph_settings["layout"]["legend"] = {
+    "font_size": 10,
+    "yanchor": "middle",
+    "xanchor": "right"
+}
 
 # DATA LOADING
 
@@ -57,7 +60,8 @@ features_descriptions = features_descriptions.rename(columns={0:'Feature descrip
 
 features_max = get_max_each_feature(bill_join_df)
 
-color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
+# color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
+color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
 
 def add_tags(tag, word):
     return "<%s>%s</%s>" % (tag, word, tag)
@@ -160,7 +164,7 @@ def update_figure_genre(selected_genre, selected_origin):
             # color=,
             opacity=0.7,
             marker=dict(
-                line_width=1,
+                line=dict(width=0.5, color='#2B3E50'),
                 symbol='circle',
                 size=16,
                 color= color_sequence[np.where(best_era_df['Song Era'].unique() == i)[0][0]]

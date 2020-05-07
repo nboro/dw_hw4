@@ -18,6 +18,12 @@ with open(f"data/lyric.json", "r") as f:
 graph_settings = get_graph_template()
 graph_settings["layout"]["xaxis"]["zeroline"] = False
 graph_settings["layout"]["yaxis"]["zeroline"] = False
+graph_settings["layout"]["legend"] = {
+    "x": 0,
+    "y": 1,
+    "xanchor": "left",
+    "yanchor": "top"
+}
 
 
 # FUNCTIONS

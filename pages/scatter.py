@@ -28,6 +28,10 @@ graph_settings["layout"]["xaxis"]["title"] = "Ranking Year"
 graph_settings["layout"]["xaxis"]["range"] = [1998, 2020]
 graph_settings["layout"]["yaxis"]["title"] = "Song Release Year"
 graph_settings["layout"]["yaxis"]["range"] = [1955, 2020]
+graph_settings["layout"]["legend"] = {
+    "x": 0,
+    "y": 1
+}
 
 
 content = html.Div([
@@ -136,6 +140,7 @@ def update_figure(selected_isDutch, bill_rank_lista):
     for i in filtered_year_chart_df['main_genre'].unique():
         df = filtered_year_chart_df[filtered_year_chart_df['main_genre'] == i]
         traces.append(dict(
+            type="scattergl",
             x=df["Ranking Year"],
             y=df["Song Release Year"],
             text= df["title"],
@@ -143,7 +148,7 @@ def update_figure(selected_isDutch, bill_rank_lista):
             opacity=0.7,
             marker={
                 'size': 8,
-                'line': {'width': 0.5, 'color': 'white'}
+                'line': {'width': 0.5, 'color': '#2B3E50'}
             },
             name=i
         ))

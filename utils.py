@@ -25,13 +25,6 @@ def get_graph_template():
                 "color": "#EBEBEB",
                 "automargin": True
             },
-            "legend": {
-                "x": 0.5,
-                "y": -0.2,
-                "xanchor": "center",
-                "yanchor": "top",
-                "orientation": "h"
-            },
             "font": {
                 "family": "Roboto",
                 "size": 14,
@@ -46,7 +39,7 @@ def get_graph_template():
             "margin": {
                 "r": 2,
                 "t": 2
-            },
+            }
         },
         "config": {
             "displayModeBar": False
@@ -90,7 +83,9 @@ def get_song_card(song_id):
             html.H6(artists, className="card-subtitle text-muted")
         ]),
         dbc.CardBody([
-            html.Img(src=first_artist_img, height=100, alt="Artist Image", className="card-text rounded mx-auto d-block")
+            html.Img(src=first_artist_img, height=150, alt="Artist Image",
+                     className="card-text border mx-auto d-block"
+                     )
         ]),
         dbc.CardBody([
             html.Table([
@@ -180,7 +175,7 @@ def get_song_card(song_id):
                 }
             )
         ]),
-    ], style={"width": "18rem", "border-radius": "5px"})
+    ], style={"width": "18rem"})
     return card
 
 
