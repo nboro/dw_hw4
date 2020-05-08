@@ -63,56 +63,90 @@ features_max = get_max_each_feature(bill_join_df)
 # color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
 color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
 
+
 def add_tags(tag, word):
     return "<%s>%s</%s>" % (tag, word, tag)
 
-# CONTENT
-content = html.Div(
-    [
-        dbc.Row(
-            [
-                dbc.Col(html.Div([
-                    html.H3("Comparing Features of Different Song Eras (based on Spotify API)")
-                ]),className="text-center",),
-            ]
-        ),
-        dbc.Row(
-            [
-                # dbc.Col(html.Div([
-                #     html.P("Filters")
-                # ]),width={"size":1,"order":1,"offset": 1}),
-                dbc.Col(html.Div([
-                    dcc.Dropdown(
-                        id='genres',
-                    ),
-                ]),width={"size":3,"order":2,"offset": 12}),
-                dbc.Col(html.Div([
-                    dcc.Dropdown(
-                        id='dutch',
-                        options=[{'label': key, 'value': key} for key in origin_list],
-                        value= 'Dutch'
-                    ),
-                ]),width={"size":3,"order":1,"offset": 2}),
-            ],
-        style={'margin-top':'20px'}),
-        dbc.Row(
-            [
-                dbc.Col(html.Div(children=[
-                    dcc.Graph(
-                        id='song-feature-99',
-                        config=graph_settings["config"],
-                        # figure = fig
-                    ),
-                ]),width="auto"),
-                dbc.Col(id='feature_text',width="auto",align="center")
-                # dbc.Col(generate_table(features_descriptions, max_rows=9),width="auto",align="center"),
-            ],            
-            justify="center",
-        ),
-        html.Div(id='app-1-display-value'),
-        # dcc.Link('Go to App 2', href='/apps/app2')       
-    ],
-)
+
+# CONTENTS
+title = "Comparing Features of Different Song Eras (based on Spotify API)"
+
+content = [
+    dbc.Row([
+        dbc.Col([
+            dbc.FormGroup([
+                dbc.Label("Country:"),
+                dbc.Select(
+                    id='dutch',
+                    options=[{'label': key, 'value': key} for key in origin_list],
+                    value='Dutch'
+                )
+            ])
+        ], width=4),
+        dbc.Col([
+            dbc.FormGroup([
+                dbc.Label("Genre:"),
+                dbc.Select(
+                    id="genres",
+                    options=[{'label': 'rock', 'value': 'rock'}],  # TODO fix this with correct initial value list
+                    value='rock'
+                )
+            ])
+        ], width=4)
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(
+                id='song-feature-99',
+                config=graph_settings["config"],
+                # figure = fig
+            ),
+        ])
+    ]),
+    html.Div(id='app-1-display-value')
+]
+
+description = html.Div(id='feature_text', children="Click a dot..")
+
+# content = html.Div(
+#     [
+#         dbc.Row(
+#             [
+#                 # dbc.Col(html.Div([
+#                 #     html.P("Filters")
+#                 # ]),width={"size":1,"order":1,"offset": 1}),
+#                 dbc.Col(html.Div([
+#                     dcc.Dropdown(
+#                         id='genres',
+#                     ),
+#                 ]),width={"size":3,"order":2,"offset": 12}),
+#                 dbc.Col(html.Div([
+#                     dcc.Dropdown(
+#                         id='dutch',
+#                         options=[{'label': key, 'value': key} for key in origin_list],
+#                         value= 'Dutch'
+#                     ),
+#                 ]),width={"size":3,"order":1,"offset": 2}),
+#             ],
+#         style={'margin-top':'20px'}),
+#         dbc.Row(
+#             [
+#                 dbc.Col(html.Div(children=[
+#                     dcc.Graph(
+#                         id='song-feature-99',
+#                         config=graph_settings["config"],
+#                         # figure = fig
+#                     ),
+#                 ]),width="auto"),
+#                 dbc.Col(id='feature_text',width="auto",align="center")
+#                 # dbc.Col(generate_table(features_descriptions, max_rows=9),width="auto",align="center"),
+#             ],
+#             justify="center",
+#         ),
+#         html.Div(id='app-1-display-value'),
+#         # dcc.Link('Go to App 2', href='/apps/app2')
+#     ],
+# )
 
 
 #CALLBACKS

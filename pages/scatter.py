@@ -33,68 +33,132 @@ graph_settings["layout"]["legend"] = {
     "y": 1
 }
 
+title = "Release year of top-200 songs"
 
-content = html.Div([
-
+content = [
     dbc.Row([
-        dbc.Col(html.Div([
-            html.H2("Release year of top-200 songs")
-        ]),className="text-center"),
+        dbc.Col([
+            dbc.FormGroup([
+                dbc.Label("Country:"),
+                dbc.Select(
+                    id='isDutch-dropdown',
+                    options=[{'label': key, 'value': key} for key in isDutch_list],
+                    value='All'
+                )
+            ])
+        ], width=4)
     ]),
-
     dbc.Row([
-
-                dbc.Col(html.Div([
-                    dcc.Graph(id='graph-with-slider'),
-
-                    dbc.Row([
-                        dbc.Col(html.Div([
-                            html.H6("Filter by top k songs")
-                        ]), className="text-center", ),
-
-
-                    ]),
-
-                    dcc.Slider(
-                            id='rank-slider',
-                            min=10,
-                            max=200,
-                            value=200,
-                            marks={str(pos): str(pos) for pos in range(10,201,10)},
-                            step=10,
-
-                    ),
-
-                ])),
-
-
-                dbc.Col(html.Div([
-                    dcc.Dropdown(
-                        id='isDutch-dropdown',
-                        options=[{'label': key, 'value': key} for key in isDutch_list],
-                        value='All')
-                ]),width={"size":3,"order":2,"offset": 0}),
+        dbc.Col([
+            dcc.Graph(id='graph-with-slider', config=graph_settings["config"])
+        ], width=12)
     ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Label(children="Top-n:"),
+            dcc.Slider(
+                    id='rank-slider',
+                    min=10,
+                    max=200,
+                    value=200,
+                    marks={str(pos): str(pos) for pos in range(10,201,10)},
+                    step=10,
+            ),
+        ])
+    ])
+]
 
-    # dbc.Row(
-    #     [
-    #         dbc.Col(html.Div(children=[
-    #                     dcc.Slider(
-    #                         id='rank-slider',
-    #                         min=10,
-    #                         max=200,
-    #                         value=200,
-    #                         marks={str(pos): str(pos) for pos in range(10,211,20)},
-    #                         step=10,
-    #
-    #                     ),
-    #         ])),
-    #         dbc.Col(id='feature_text', width="auto", align="center")
-    #     ],
-    #     justify="center",
-    # )
-    ],
-    style={'margin-top':'20px'}),
+description = html.Div(id="scatter-description", children="")
+
+
+# content = html.Div([
+#
+#     dbc.Row([
+#         dbc.Col(html.Div([
+#             html.H2("Release year of top-200 songs")
+#         ]),className="text-center"),
+#     ]),
+#
+#     dbc.Row([
+#
+#                 dbc.Col(html.Div([
+#                     dcc.Graph(id='graph-with-slider'),
+#
+#                     dcc.Slider(
+#                             id='rank-slider',
+#                             min=10,
+#                             max=200,
+#                             value=200,
+#                             marks={str(pos): str(pos) for pos in range(10,201,10)},
+#                             step=10,
+#
+#                     ),
+#
+#                 ])),
+#
+#
+#                 dbc.Col(html.Div([
+#                     dcc.Dropdown(
+#                         id='isDutch-dropdown',
+#                         options=[{'label': key, 'value': key} for key in isDutch_list],
+#                         value='All')
+#                 ]),width={"size":3,"order":2,"offset": 0}),
+#     ]),
+#
+#
+#     dbc.Row([
+#
+#                 dbc.Col(html.Div([
+#                     dcc.Graph(id='graph-with-slider'),
+#
+#                     dbc.Row([
+#                         dbc.Col(html.Div([
+#                             html.H6("Filter by top k songs")
+#                         ]), className="text-center", ),
+#
+#
+#                     ]),
+#
+#                     dcc.Slider(
+#                             id='rank-slider',
+#                             min=10,
+#                             max=200,
+#                             value=200,
+#                             marks={str(pos): str(pos) for pos in range(10,201,10)},
+#                             step=10,
+#
+#                     ),
+#
+#                 ])),
+#
+#
+#                 dbc.Col(html.Div([
+#                     dcc.Dropdown(
+#                         id='isDutch-dropdown',
+#                         options=[{'label': key, 'value': key} for key in isDutch_list],
+#                         value='All')
+#                 ]),width={"size":3,"order":2,"offset": 0}),
+#     ]),
+#
+#     # dbc.Row(
+#     #     [
+#     #         dbc.Col(html.Div(children=[
+#     #                     dcc.Slider(
+#     #                         id='rank-slider',
+#     #                         min=10,
+#     #                         max=200,
+#     #                         value=200,
+#     #                         marks={str(pos): str(pos) for pos in range(10,211,20)},
+#     #                         step=10,
+#     #
+#     #                     ),
+#     #         ])),
+#     #         dbc.Col(id='feature_text', width="auto", align="center")
+#     #     ],
+#     #     justify="center",
+#     # )
+#     ],
+#     style={'margin-top':'20px'}),
 
 
     # html.Div(

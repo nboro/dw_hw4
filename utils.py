@@ -47,6 +47,43 @@ def get_graph_template():
     }
 
 
+def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
+    buttons = []
+    if prev_icon:
+        buttons.append(
+            dcc.Link(
+                dbc.Button(
+                    html.Span(
+                        className=f"oi {prev_icon}",
+                        title="Prev"
+                    ),
+                    outline=True,
+                    color="light",
+                    size="sm"
+                ),
+                id="prev-page",
+                href=prev_url
+            )
+        )
+    if next_icon:
+        buttons.append(
+            dcc.Link(
+                dbc.Button(
+                    html.Span(
+                        className=f"oi {next_icon}",
+                        title="Next"
+                    ),
+                    outline=True,
+                    color="primary",
+                    size="sm"
+                ),
+                id="next-page",
+                href=next_url
+            )
+        )
+    return dbc.ButtonGroup(buttons) if len(buttons) > 0 else ""
+
+
 def generate_table(dataframe, max_rows):
 
     """ A function which returns a responsive html table provided a dataframe """
@@ -65,7 +102,18 @@ def generate_table(dataframe, max_rows):
     ], className="table-responsive")
 
 
-def get_song_card(song_id):
+def get_lyric_snippet(song_data):
+    lyric_row = []
+    lyric_snippet = [snippet for snippet in song_data["lyric_snippet"][:100].split("|") if snippet]
+    for i, lyric in enumerate(lyric_snippet):
+        if i < len( lyric_snippet ) - 1:
+            lyric_row += [html.Small(html.Em(lyric)), html.Br()]
+        else:
+            lyric_row.append(html.Small(html.Em(lyric + "...")))
+    return lyric_row
+
+
+def get_song_card(song_id, similars=None):
     with open("data/song_card.json", "r") as f_in:
         songs = json.load(f_in)
     song_data = songs[song_id]
@@ -77,106 +125,144 @@ def get_song_card(song_id):
     song_year = song_data["year"]
     first_artist_img = song_data["first_artist_img"]
     valid_idx = [i for i, r in enumerate(song_data["bill_ranks"]) if r <= 200]
-    card = dbc.Card([
+    card_contents = [
         dbc.CardHeader([
-            html.H3(html.Strong(title, className="card-title text-info")),
+            html.H4(html.Strong(title, className="card-title text-info")),
             html.H6(artists, className="card-subtitle text-muted")
         ]),
         dbc.CardBody([
-            html.Img(src=first_artist_img, height=150, alt="Artist Image",
+            html.Img(src=first_artist_img, height=125, alt="Artist Image",
                      className="card-text border mx-auto d-block"
                      )
-        ]),
-        dbc.CardBody([
-            html.Table([
-                html.Tr([html.Td(html.Strong("Released in", className="text-info")), html.Td(song_year)]),
-                html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
-                html.Tr([html.Td(html.Strong("Positions", className="text-info")), html.Td()])
-            ]),
-            dcc.Graph(
-                figure={
-                    "data": [{
-                        "x": [song_data["bill_years"][i] if i in valid_idx else None for i in
-                              range(len( song_data["bill_years"]))],
-                        "y": [song_data["bill_ranks"][i] if i in valid_idx else None for i in
-                              range(len(song_data["bill_ranks"]))],
-                        "hoverinfo": "skip",
-                        "mode": "line",
-                        "line": {
-                            "color": "#5bc0de",
-                            "width": 1
+        ])
+    ]
+    if similars:
+        lyric_row = get_lyric_snippet(song_data)
+        similar_rows = [
+            html.P(lyric_row, className="text-center"),
+            dbc.Label("is similar to:")
+        ]
+        for i, similar in enumerate(similars):
+            similar_song_id = similar["song_id"]
+            similar_song_data = songs[similar_song_id]
+            similar_lyric_row = get_lyric_snippet(similar_song_data)
+            similar_rows += [
+                dbc.Progress(
+                    html.Small("%.1f" % (similar["similarity"] * 100) + "%"),
+                    value=similar["similarity"] * 100,
+                    className="",
+                    style={"height": "10px"}
+                ),
+                html.P([
+                    html.Span(similar["title"] + " ", className="text-info"),
+                    html.Small(
+                        html.Span(className="oi oi-musical-note text-primary"),
+                        id=f"similar-lyric-{i}"
+                    ),
+                    dbc.Tooltip(
+                        similar_lyric_row,
+                        target=f"similar-lyric-{i}",
+                        placement="right"
+                    ),
+                    html.Br(),
+                    html.Small(similar["all_artists"], className="text-muted")
+                ])
+            ]
+        card_contents.append(dbc.CardBody(similar_rows))
+    else:
+        card_contents.append(
+            dbc.CardBody([
+                dbc.Label("Positions:"),
+                html.Table([
+                    html.Tr([html.Td(html.Strong("Released in", className="text-info")), html.Td(song_year)]),
+                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
+                    html.Tr([html.Td(html.Strong("Positions", className="text-info")), html.Td()])
+                ], className="card-table"),
+                dcc.Graph(
+                    figure={
+                        "data": [{
+                            "x": [song_data["bill_years"][i] if i in valid_idx else None for i in
+                                  range(len( song_data["bill_years"]))],
+                            "y": [song_data["bill_ranks"][i] if i in valid_idx else None for i in
+                                  range(len(song_data["bill_ranks"]))],
+                            "hoverinfo": "skip",
+                            "mode": "line",
+                            "line": {
+                                "color": "#5bc0de",
+                                "width": 1
+                            }
+                        }, {
+                            "name": "",
+                            "x": [song_data["bill_years"][i] if i != hp_idx else None for i in valid_idx],
+                            "y": [song_data["bill_ranks"][i] if i != hp_idx else None for i in valid_idx],
+                            "customdata": [
+                                (song_data["bill_ranks"][i], song_data["bill_years"][i]) if i != hp_idx else None for i in
+                                valid_idx
+                            ],
+                            "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
+                            "mode": "markers",
+                            "marker": {
+                                "color": "#5bc0de"
+                            }
+                        }, {
+                            "name": "",
+                            "x": [song_data["bill_years"][hp_idx]],
+                            "y": [song_data["bill_ranks"][hp_idx]],
+                            "text": [song_data["bill_ranks"][hp_idx]],
+                            "customdata": [(song_data["bill_ranks"][hp_idx], song_data["bill_years"][hp_idx])],
+                            "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
+                            "mode": "markers+text",
+                            "textposition": "top-center",
+                            "marker": {
+                                "color": "#DF691A"
+                            }
+                        }],
+                        "layout": {
+                            "hovermode": "closest",
+                            "plot_bgcolor": "#4E5D6C",
+                            "paper_bgcolor": "#4E5D6C",
+                            "showlegend": False,
+                            "xaxis": {
+                                "range": [1998, 2020],
+                                "color": "#EBEBEB",
+                                "showgrid": False,
+                                "automargin": True,
+                                "tickmode": "array",
+                                "tickvals": [2000, 2010, 2020],
+                                "ticktext": ["'00", "'10", "'20"]
+                            },
+                            "yaxis": {
+                                "range": [205, -30],
+                                "color": "#EBEBEB",
+                                "automargin": True,
+                                "zeroline": False,
+                                "tickmode": "array",
+                                "tickprefix": "Top-",
+                                "tickvals": [10, 50, 100, 200]
+                            },
+                            "font": {
+                                "family": "Roboto",
+                                "size": 12,
+                                "color": "#EBEBEB"
+                            },
+                            "margin": {
+                                "l": 2,
+                                "r": 2,
+                                "t": 2,
+                                "b": 2
+                            },
+                            "width": 240,
+                            "height": 180
                         }
-                    }, {
-                        "name": "",
-                        "x": [song_data["bill_years"][i] if i != hp_idx else None for i in valid_idx],
-                        "y": [song_data["bill_ranks"][i] if i != hp_idx else None for i in valid_idx],
-                        "customdata": [
-                            (song_data["bill_ranks"][i], song_data["bill_years"][i]) if i != hp_idx else None for i in
-                            valid_idx
-                        ],
-                        "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
-                        "mode": "markers",
-                        "marker": {
-                            "color": "#5bc0de"
-                        }
-                    }, {
-                        "name": "",
-                        "x": [song_data["bill_years"][hp_idx]],
-                        "y": [song_data["bill_ranks"][hp_idx]],
-                        "text": [song_data["bill_ranks"][hp_idx]],
-                        "customdata": [(song_data["bill_ranks"][hp_idx], song_data["bill_years"][hp_idx])],
-                        "hovertemplate": "%{customdata[0]} (%{customdata[1]})",
-                        "mode": "markers+text",
-                        "textposition": "top-center",
-                        "marker": {
-                            "color": "#DF691A"
-                        }
-                    }],
-                    "layout": {
-                        "hovermode": "closest",
-                        "plot_bgcolor": "#4E5D6C",
-                        "paper_bgcolor": "#4E5D6C",
-                        "showlegend": False,
-                        "xaxis": {
-                            "range": [1998, 2020],
-                            "color": "#EBEBEB",
-                            "showgrid": False,
-                            "automargin": True,
-                            "tickmode": "array",
-                            "tickvals": [2000, 2010, 2020],
-                            "ticktext": ["'00", "'10", "'20"]
-                        },
-                        "yaxis": {
-                            "range": [205, -30],
-                            "color": "#EBEBEB",
-                            "automargin": True,
-                            "zeroline": False,
-                            "tickmode": "array",
-                            "tickprefix": "Top-",
-                            "tickvals": [10, 50, 100, 200]
-                        },
-                        "font": {
-                            "family": "Roboto",
-                            "size": 12,
-                            "color": "#EBEBEB"
-                        },
-                        "margin": {
-                            "l": 2,
-                            "r": 2,
-                            "t": 2,
-                            "b": 2
-                        },
-                        "width": 240,
-                        "height": 180
+                    },
+                    config={
+                        "displayModeBar": False
                     }
-                },
-                config={
-                    "displayModeBar": False
-                }
-            )
-        ]),
-    ], style={"width": "18rem"})
-    return card
+                )
+            ])
+        )
+
+    return dbc.Card(card_contents, style={"width": "18rem"})
 
 
 def create_initial_era_df(df):
