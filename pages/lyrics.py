@@ -6,6 +6,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from utils import get_graph_template, get_song_card
+from copy import deepcopy
 
 from app import app
 
@@ -17,8 +18,17 @@ with open(f"data/lyric.json", "r") as f:
 # TEMPLATE SETTINGS
 graph_settings = get_graph_template()
 graph_settings["layout"]["xaxis"]["zeroline"] = False
+graph_settings["layout"]["xaxis"]["fixedrange"] = True
+graph_settings["layout"]["xaxis"]["showgrid"] = False
+graph_settings["layout"]["xaxis"]["showticklabels"] = False
 graph_settings["layout"]["yaxis"]["zeroline"] = False
+graph_settings["layout"]["yaxis"]["fixedrange"] = True
+graph_settings["layout"]["yaxis"]["showgrid"] = False
+graph_settings["layout"]["yaxis"]["showticklabels"] = False
 graph_settings["layout"]["legend"] = {
+    "title": {
+        "text": "Song Release Year"
+    },
     "x": 0,
     "y": 1,
     "xanchor": "left",
@@ -28,7 +38,7 @@ graph_settings["layout"]["legend"] = {
 
 # FUNCTIONS
 def get_figure(lang, genre, bill_year, search_text, search_type):
-    temp_lang = lang if lang else "en"
+    layout_settings = deepcopy(graph_settings["layout"])
     lyric_df = all_df[(all_df["bill_year"] == bill_year) & all_df.index.str.contains(lang)].copy()
     if genre in ("rock", "pop"):
         lyric_df = lyric_df[lyric_df["main_genre"] == genre]
@@ -40,14 +50,39 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
             if search_type != "both" else \
             lyric_df["artists"].str.contains(search_text, case=False) | \
             lyric_df["title"].str.contains(search_text, case=False)
-    traces = []
 
+    layout_settings["yaxis"]["range"] = [-0.35, 0.65] if lang == "en" else [-0.15, 0.2]
+    layout_settings["xaxis"]["range"] = [-0.5, 0.7] if lang == "en" else [-0.2, 0.2]
+
+    if len(lyric_df) == 0:
+        layout_settings["annotations"] = [{
+            "name": "empty set",
+            "text": "Oops, nothing to see here. Try another filter.",
+            "opacity": 0.5,
+            "x": 0,
+            "y": 0,
+            "xanchor": "center",
+            "yanchor": "center",
+            "showarrow": False
+        }]
+        figure = {
+            "data": [],
+            "layout": layout_settings
+        }
+        return dcc.Graph(id="lyric-fig", figure=figure, config=graph_settings["config"])
+
+    traces = []
+    names = {
+        "oldies": "1920-1989",
+        "90s": "1990-1999",
+        "2000s": "2000-2019"
+    }
     for m in [False, True]:
         for i, state in enumerate(["oldies", "90s", "2000s"]):
             trace_df = lyric_df[(lyric_df["era"] == state) & mask] if m else lyric_df[(lyric_df["era"] == state) & ~mask]
             custom_data = [(r["title"], r["artists"], r["bill_rank"], idx) for idx, r in trace_df.iterrows()]
             trace = {
-                "name": state,
+                "name": names[state],
                 "x": trace_df["pca1"],
                 "y": trace_df["pca2"],
                 "mode": "markers",
@@ -56,8 +91,8 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
                 "showlegend": m,
                 "marker": {
                     "symbol": "circle",
-                    "size": 8,
-                    "opacity": 1 if m else 0.1,
+                    "size": 11,
+                    "opacity": 0.8 if m else 0.1,
                     "line": {
                         "width": 0.5,
                         "color": "#2B3E50"
@@ -72,23 +107,9 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
 
     figure = {
         "data": traces,
-        "layout": graph_settings["layout"]
+        "layout": layout_settings
     }
-    return figure
-
-
-def get_similar_songs(song_id):
-    similar_songs = []
-    # for sim in song_data["similar"]:
-    #     sim_title = sim["title"]
-    #     sim_artists = sim["all_artists"]
-    #     sim_prob = "%.2f" % (sim["similarity"] * 100)
-    #     sim_first_artist = sim["first_artist"]
-    #     similar_songs.append((
-    #         sim_title,
-    #         sim_artists,
-    #         sim_prob,
-    #     ))
+    return dcc.Graph(id="lyric-fig", figure=figure, config=graph_settings["config"])
 
 
 # CONTENTS
@@ -125,7 +146,7 @@ content = [
                 dbc.Input(
                     id="search-input",
                     value="",
-                    placeholder="Queen",
+                    placeholder="Queen, Borsato",
                     type="text"
                 ),
                 dbc.RadioItems(
@@ -142,13 +163,11 @@ content = [
         ], width=4)
     ]),
     dbc.Row([
-        dbc.Col([
-            dcc.Graph(
-                id="lyric-fig",
-                figure=get_figure("en", ["rock", "pop", "other"], 1999, "", "all"),
-                config=graph_settings["config"]
-            )
-        ], width=12)
+        dbc.Col(
+            get_figure("en", "all", 1999, "", "both"),
+            id="lyric-fig-col",
+            width=12
+        )
     ]),
     dbc.Row([
         dbc.Col([
@@ -174,7 +193,7 @@ description = html.Div(id="lyric-description", children="Click an artist")
 
 # CALLBACKS
 @app.callback(
-    Output("lyric-fig", "figure"),
+    Output("lyric-fig-col", "children"),
     [
         Input("language-dropdown", "value"),
         Input("genre-dropdown", "value"),
