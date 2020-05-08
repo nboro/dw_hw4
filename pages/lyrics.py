@@ -45,7 +45,7 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
     for m in [False, True]:
         for i, state in enumerate(["oldies", "90s", "2000s"]):
             trace_df = lyric_df[(lyric_df["era"] == state) & mask] if m else lyric_df[(lyric_df["era"] == state) & ~mask]
-            custom_data = [(r["title"], r["artists"], r["bill_rank"]) for _, r in trace_df.iterrows()]
+            custom_data = [(r["title"], r["artists"], r["bill_rank"], idx) for idx, r in trace_df.iterrows()]
             trace = {
                 "name": state,
                 "x": trace_df["pca1"],
@@ -192,4 +192,6 @@ def display_artist_info(click_data):
     if click_data is None or "text" not in click_data["points"][0]:
         return [html.Div("Click an artist")]
     curr_song_id = click_data["points"][0]["text"]
-    return get_song_card(curr_song_id)
+    curr_df_id = click_data["points"][0]["customdata"][3]
+    similars = all_df.loc[curr_df_id]["similar"]
+    return get_song_card(curr_song_id, similars)

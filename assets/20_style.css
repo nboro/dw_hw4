@@ -34,3 +34,9 @@
 .icon-orange {
   fill: #DF691A;
 }
+
+.card-table {
+    width: 100%;
+    table-layout: fixed;
+    overflow-wrap: break-word
+}
