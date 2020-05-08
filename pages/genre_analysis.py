@@ -11,7 +11,7 @@ from utils import get_graph_template
 
 from app import app
 # load data
-sample_set = pd.read_csv("data/genre_analysis.csv")
+sample_set = pd.read_csv("data/genre_analysis_v2.csv")
 # Set color for Era's
 available_eras = list(sample_set['era'].unique())
 era_col = {
@@ -20,7 +20,7 @@ era_col = {
     "2000s": "#d9534f"
 }
 
-fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Genre: Rock', 'Genre: Pop', 'Genre: Other'))
+fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Genre: Rock', 'Genre: Pop', 'Genre: Soul'))
 
 
 def grouped_df(value):
@@ -30,10 +30,9 @@ def grouped_df(value):
 
 
 def group_titles():
-    pop_specific = grouped_df('pop')
     i = 1
     legend_names = set()
-    for genree in ['rock', 'pop', 'other']:
+    for genree in ['rock', 'pop', 'soul']:
         specific = grouped_df(genree)
         for namex, group in specific.groupby('title'):
             era = group.era[0]
@@ -43,8 +42,8 @@ def group_titles():
                                      legendgroup=era,
                                      name=era,
                                      visible=True, text=namex,
-                                     line=dict(width=1, color=line_color), showlegend=era not in legend_names,
-                                     mode='lines+markers', hoverinfo='x+y+text+name'),
+                                     line=dict(width=2, color=line_color), showlegend=era not in legend_names,
+                                     mode='lines', hoverinfo='x+y+text+name'),
                           row=1, col=i)
             legend_names.add(era)
         i += 1
