@@ -5,7 +5,7 @@ import pickle
 import json
 
 song_features = [
-    'duration_ms', 'followers', 'analysis_loudness', 'analysis_tempo',
+    'duration_ms', 'analysis_loudness', 'analysis_tempo',
     'feature_danceability', 'feature_energy', 'feature_speechiness', 'feature_instrumentalness', 
     'feature_liveness', 'feature_valence'
 ]
@@ -276,7 +276,7 @@ def create_initial_era_df(df):
     del best_era_df["index"]
     del best_era_df["title"]
     best_era_df.columns = [
-        "era", "Duration", "Mainstream", "Loudness", "Tempo",
+        "era", "Duration", "Loudness", "Tempo",
         "Danceability", "Energy", "Speechiness", "Instrumentalness",
         "Liveness", "Valence"
     ]
@@ -298,12 +298,25 @@ def create_era_df(df):
 
         return best_era_df2
 
-def get_max_each_feature(df):
+def get_max_each_feature(df,era,genre,origin):
 
     max_songs={}
+    max_songs_general={}
+    
+    if origin != 'All':
+        df_filtered = df[df['is_dutch'] == origin]
+    else:
+        df_filtered = df
+        
+    df_filtered = df_filtered[df_filtered['main_genre'] == genre]
+
+    df_filtered2 = df_filtered[df_filtered['era'] == era]
+
     for feature in song_features:
         # print(feature)
-        row = df.loc[df[feature].idxmax()]
+        row = df_filtered2.loc[df_filtered2[feature].idxmax()]        
         max_songs[feature] = row['title']+ '_'+row['artist']+'_'+row['main_genre']
+        row_general = df_filtered.loc[df_filtered[feature].idxmax()]
+        max_songs_general[feature] = row_general['title']+ '_'+row_general['artist']+'_'+row_general['main_genre']+'_'+row_general['era']
     
-    return max_songs
+    return max_songs,max_songs_general

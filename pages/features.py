@@ -18,10 +18,11 @@ graph_settings["layout"]["xaxis"]["showgrid"] = False
 graph_settings["layout"]["xaxis"]["dtick"] = 25
 graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
 graph_settings["layout"]["xaxis"]["fixedrange"] = True
-# graph_settings["layout"]["xaxis"]["range"] = [-100, 100]
+graph_settings["layout"]["xaxis"]["range"] = [-100, 100]
 graph_settings["layout"]["yaxis"]["title"] = "Song Features"
 graph_settings["layout"]["yaxis"]["fixedrange"] = True
 graph_settings["layout"]["yaxis"]["zeroline"] = False
+graph_settings["layout"]["clickmode"] = 'event'
 graph_settings["layout"]["legend"] = {
     "font_size": 10,
     "yanchor": "middle",
@@ -31,19 +32,23 @@ graph_settings["layout"]["legend"] = {
 # DATA LOADING
 
 bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
-bill_join_df = bill_join_df.dropna(subset=['main_genre','is_dutch'])
+bill_join_df = bill_join_df.dropna(subset=['main_genre','is_dutch','era'])
+bill_join_df = bill_join_df.drop(columns=['followers'],axis =1)
 
 genres = bill_join_df['main_genre'].unique().tolist()
 
-bill_join_df.is_dutch = bill_join_df.is_dutch.map({True:'Dutch', False:'Non-Dutch'})
+bill_join_df.is_dutch = bill_join_df.is_dutch.map({True:'Dutch', False:'International'})
 origin_list = bill_join_df.is_dutch.unique().tolist()
+origin_list.append('All')
 
 feature_list = ['Danceability','Energy','Speachiness','Instrumentalness','Liveness','Valence','Tempo']
 
 feature_map = {
-    'Duration':'duration_ms', 'Mainstream':'followers', 'Loudness':'analysis_loudness', 'Tempo':'analysis_tempo',
+    'Duration':'duration_ms', 'Loudness':'analysis_loudness', 'Tempo':'analysis_tempo',
     'Danceability':'feature_danceability', 'Energy':'feature_energy', 'Speechiness':'feature_speechiness', 'Instrumentalness':'feature_instrumentalness','Liveness':'feature_liveness', 'Valence':'feature_valence'
 }
+
+era_map = {'1920-1989':'oldies', '1990-1999':'90s','2000-2020':'2000s'}
 
 feature_desc = {
     'Valence':'Musical positiveness (e.g. happy, cheerful, euphoric) conveyed by a track.'
@@ -54,7 +59,7 @@ feature_desc = {
     ,'Danceability':'How suitable a track is for dancing.'       
     ,'Tempo':'The overall estimated tempo of a track in beats per minute (BPM).'
     ,'Loudness':'The overall loudness of a track in decibels (dB).'
-    ,'Mainstream': 'The number of followers of the artis on spotify'
+    # ,'Mainstream': 'The number of followers of the artis on spotify'
     ,'Duration':'The duration of the song'
 }
 
@@ -62,7 +67,7 @@ features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
 features_descriptions = features_descriptions.reset_index()
 features_descriptions = features_descriptions.rename(columns={0:'Feature description','index':'Features'})
 
-features_max = get_max_each_feature(bill_join_df)
+# features_max = get_max_each_feature(bill_join_df)
 
 # color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
 color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
@@ -70,6 +75,13 @@ color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
 
 def add_tags(tag, word):
     return "<%s>%s</%s>" % (tag, word, tag)
+
+def get_key(text):
+    k=''
+    for key in era_map.keys():
+        if era_map[key] == text:
+            k=key
+            return k
 
 
 # CONTENTS
@@ -83,7 +95,7 @@ content = [
                 dbc.Select(
                     id='dutch',
                     options=[{'label': key, 'value': key} for key in origin_list],
-                    value='Dutch'
+                    value='All'
                 )
             ])
         ], width=4),
@@ -112,47 +124,6 @@ content = [
 
 description = html.Div(id='feature_text', children="Click a dot to see details.")
 
-# content = html.Div(
-#     [
-#         dbc.Row(
-#             [
-#                 # dbc.Col(html.Div([
-#                 #     html.P("Filters")
-#                 # ]),width={"size":1,"order":1,"offset": 1}),
-#                 dbc.Col(html.Div([
-#                     dcc.Dropdown(
-#                         id='genres',
-#                     ),
-#                 ]),width={"size":3,"order":2,"offset": 12}),
-#                 dbc.Col(html.Div([
-#                     dcc.Dropdown(
-#                         id='dutch',
-#                         options=[{'label': key, 'value': key} for key in origin_list],
-#                         value= 'Dutch'
-#                     ),
-#                 ]),width={"size":3,"order":1,"offset": 2}),
-#             ],
-#         style={'margin-top':'20px'}),
-#         dbc.Row(
-#             [
-#                 dbc.Col(html.Div(children=[
-#                     dcc.Graph(
-#                         id='song-feature-99',
-#                         config=graph_settings["config"],
-#                         # figure = fig
-#                     ),
-#                 ]),width="auto"),
-#                 dbc.Col(id='feature_text',width="auto",align="center")
-#                 # dbc.Col(generate_table(features_descriptions, max_rows=9),width="auto",align="center"),
-#             ],
-#             justify="center",
-#         ),
-#         html.Div(id='app-1-display-value'),
-#         # dcc.Link('Go to App 2', href='/apps/app2')
-#     ],
-# )
-
-
 #CALLBACKS
 
 #genre dropdown
@@ -163,9 +134,12 @@ description = html.Div(id='feature_text', children="Click a dot to see details."
     ])
 def update_genre(selected_origin):
 
-    filtered_df = bill_join_df[bill_join_df['is_dutch'] == selected_origin]
+    if selected_origin != "All":
+        filtered_genre = bill_join_df[bill_join_df['is_dutch'] == selected_origin]
+    else:
+        filtered_genre = bill_join_df
 
-    return [{'label': i, 'value': i} for i in list(filtered_df.main_genre.unique())]
+    return [{'label': i, 'value': i} for i in list(filtered_genre.main_genre.unique())]
 
 @app.callback(
     Output('genres', 'value'),
@@ -185,8 +159,13 @@ def set_genre(available_options):
     ])
 def update_figure_genre(selected_genre, selected_origin):
 
-    filtered_genre = bill_join_df[bill_join_df['main_genre'] == selected_genre]
-    filtered_genre = filtered_genre[filtered_genre['is_dutch'] == selected_origin]
+    if selected_origin != "All":
+        filtered_genre = bill_join_df[bill_join_df['is_dutch'] == selected_origin]
+    else:
+        filtered_genre = bill_join_df
+
+    filtered_genre = filtered_genre[filtered_genre['main_genre'] == selected_genre]
+    
 
     create_initial_era_df(filtered_genre)
     best_era_df = create_era_df(filtered_genre)
@@ -194,6 +173,9 @@ def update_figure_genre(selected_genre, selected_origin):
     traces = []
     for i in best_era_df['Song Era'].unique():
         df = best_era_df[best_era_df['Song Era'] == i]
+
+        custom_data = [(row['Song Era'],selected_genre,selected_origin) for idx, row in df.iterrows()]
+
         traces.append(dict(
             x=df['Compared to Oldies (Song Released < 1990)'],
             y=df['Song Features'],
@@ -201,8 +183,9 @@ def update_figure_genre(selected_genre, selected_origin):
             mode='markers',
             # color=,
             opacity=0.7,
+            customdata = custom_data,
             marker=dict(
-                line=dict(width=0.5, color='#2B3E50'),
+                # line=dict(width=0.5, color='#2B3E50'),
                 symbol='circle',
                 size=16,
                 color= color_sequence[np.where(best_era_df['Song Era'].unique() == i)[0][0]]
@@ -213,35 +196,9 @@ def update_figure_genre(selected_genre, selected_origin):
     return {
         'data': traces,
         'layout': graph_settings["layout"]
-        # 'layout': dict(
-        #     # title = 'Comparing Features of Different Song Eras (based on Spotify API)',
-        #     xaxis=dict(
-        #         title = '',
-        #         showgrid=False,
-        #         showline=True,
-        #         linecolor='rgb(102, 102, 102)',
-        #         tickfont_color='rgb(102, 102, 102)',
-        #         showticklabels=True,
-        #         dtick=25,
-        #         ticks='outside',
-        #         tickcolor='rgb(102, 102, 102)',
-        #         ticksuffix='%'
-        #     ),
-        #     yaxis=dict(title='Song features'),
-        #     margin=dict(l=140, r=0, b=50, t=80),
-        #     legend=dict(
-        #         font_size=10,
-        #         yanchor='middle',
-        #         xanchor='right',
-        #     ),
-        #     paper_bgcolor='white',
-        #     plot_bgcolor='white',
-        #     hovermode='closest',
-        #     width=1024,
-        #     height=760,
-        # )
     }
 
+#click data
 @app.callback(
     Output('feature_text','children'),
     [
@@ -251,19 +208,34 @@ def update_figure_genre(selected_genre, selected_origin):
 def display_feature_text(clickData):
     if clickData is None or "y" not in clickData["points"][0]:
         return [html.Div("Click a dot to see details.")]
+    display2row = 'table-cell'
     click = clickData['points'][0]
+    era = click['customdata'][0]
+    genre = click['customdata'][1]
+    origin = click['customdata'][2]
+    era_mapped = era_map[era]
     feature = click['y']
     table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
     row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
-    max_key = feature_map[feature]
-    max_value = features_max[max_key]
-    title, artist, genre = max_value.split(sep='_')
-    row2 = html.Tr([html.Td(dcc.Markdown('''
-                The song with the highest *'''+feature+'''* is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
-            ))])
 
+    max_key = feature_map[feature]
+    max_val,max_val_general = get_max_each_feature(bill_join_df,era_mapped,genre,origin)
+    max_value = max_val[max_key]
+    title, artist, genre = max_value.split(sep='_')
+    max_value_general = max_val_general[max_key]
+    title2, artist2, genre2,era22 = max_value_general.split(sep='_')
+    era2 = get_key(era22)
+    if title == title2:
+        display2row='none'
+    
+    row2 = html.Tr([html.Td(dcc.Markdown('''
+                The song with the highest *'''+feature+'''* in the era **'''+ era+ '''** ''' +''' is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
+            ))])
+    row3 = html.Tr([html.Td(dcc.Markdown('''
+                The song with the highest *'''+feature+'''* among **ALL eras** is **'''+ title2+ '''** ''' +''' belongs to the era **'''+era2+'''** , is performed by **'''+artist2+'''** and belongs to the **'''+genre2+'''** genre.'''
+            ))],style = {'display':display2row})
     table_body = [html.Tbody([row1])]
-    table_body2 = [html.Tbody([row2])]
+    table_body2 = [html.Tbody([row2,row3])]
     table = dbc.Table(table_header + table_body)
     table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
     return html.Div(children=[
