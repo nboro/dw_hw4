@@ -140,7 +140,7 @@ def get_song_card(song_id, similars=None):
         lyric_row = get_lyric_snippet(song_data)
         similar_rows = [
             html.P(lyric_row, className="text-center"),
-            dbc.Label("is similar to:")
+            dbc.Label("The lyric is similar to:")
         ]
         for i, similar in enumerate(similars):
             similar_song_id = similar["song_id"]
@@ -170,14 +170,15 @@ def get_song_card(song_id, similars=None):
             ]
         card_contents.append(dbc.CardBody(similar_rows))
     else:
-        card_contents.append(
+        card_contents += [
             dbc.CardBody([
-                dbc.Label("Positions:"),
                 html.Table([
                     html.Tr([html.Td(html.Strong("Released in", className="text-info")), html.Td(song_year)]),
-                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
-                    html.Tr([html.Td(html.Strong("Positions", className="text-info")), html.Td()])
-                ], className="card-table"),
+                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)])
+                ], className="card-table")
+            ]),
+            dbc.CardBody([
+                dbc.Label("Positions:"),
                 dcc.Graph(
                     figure={
                         "data": [{
@@ -260,7 +261,7 @@ def get_song_card(song_id, similars=None):
                     }
                 )
             ])
-        )
+        ]
 
     return dbc.Card(card_contents, style={"width": "18rem"})
 

@@ -17,7 +17,11 @@ graph_settings = get_graph_template()
 graph_settings["layout"]["xaxis"]["showgrid"] = False
 graph_settings["layout"]["xaxis"]["dtick"] = 25
 graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
+graph_settings["layout"]["xaxis"]["fixedrange"] = True
+# graph_settings["layout"]["xaxis"]["range"] = [-100, 100]
 graph_settings["layout"]["yaxis"]["title"] = "Song Features"
+graph_settings["layout"]["yaxis"]["fixedrange"] = True
+graph_settings["layout"]["yaxis"]["zeroline"] = False
 graph_settings["layout"]["legend"] = {
     "font_size": 10,
     "yanchor": "middle",
@@ -98,15 +102,15 @@ content = [
         dbc.Col([
             dcc.Graph(
                 id='song-feature-99',
-                config=graph_settings["config"],
-                # figure = fig
+                figure={"data": [], "layout": graph_settings["layout"]},
+                config=graph_settings["config"]
             ),
         ])
     ]),
     html.Div(id='app-1-display-value')
 ]
 
-description = html.Div(id='feature_text', children="Click a dot..")
+description = html.Div(id='feature_text', children="Click a dot to see details.")
 
 # content = html.Div(
 #     [
@@ -245,22 +249,23 @@ def update_figure_genre(selected_genre, selected_origin):
     ]
 )
 def display_feature_text(clickData):
-    if clickData:
-        click = clickData['points'][0]
-        feature = click['y']
-        table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
-        row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
-        max_key = feature_map[feature]
-        max_value = features_max[max_key]
-        title, artist, genre = max_value.split(sep='_')
-        row2 = html.Tr([html.Td(dcc.Markdown('''
-                    The song with the highest *'''+feature+'''* is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
-                ))])
-        
-        table_body = [html.Tbody([row1])]
-        table_body2 = [html.Tbody([row2])]
-        table = dbc.Table(table_header + table_body)
-        table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
-        return html.Div(children=[
-            table,table2
-        ], className="table-responsive")
+    if clickData is None or "y" not in clickData["points"][0]:
+        return [html.Div("Click a dot to see details.")]
+    click = clickData['points'][0]
+    feature = click['y']
+    table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
+    row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
+    max_key = feature_map[feature]
+    max_value = features_max[max_key]
+    title, artist, genre = max_value.split(sep='_')
+    row2 = html.Tr([html.Td(dcc.Markdown('''
+                The song with the highest *'''+feature+'''* is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
+            ))])
+
+    table_body = [html.Tbody([row1])]
+    table_body2 = [html.Tbody([row2])]
+    table = dbc.Table(table_header + table_body)
+    table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
+    return html.Div(children=[
+        table,table2
+    ], className="table-responsive")

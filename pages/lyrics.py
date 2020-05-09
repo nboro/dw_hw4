@@ -42,7 +42,7 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
     lyric_df = all_df[(all_df["bill_year"] == bill_year) & all_df.index.str.contains(lang)].copy()
     if genre in ("rock", "pop"):
         lyric_df = lyric_df[lyric_df["main_genre"] == genre]
-    elif genre == "other":
+    elif genre == "others":
         lyric_df = lyric_df[~lyric_df["main_genre"].isin(["rock", "pop"])]
     mask = True
     if len(search_text) > 0:
@@ -80,7 +80,9 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
     for m in [False, True]:
         for i, state in enumerate(["oldies", "90s", "2000s"]):
             trace_df = lyric_df[(lyric_df["era"] == state) & mask] if m else lyric_df[(lyric_df["era"] == state) & ~mask]
-            custom_data = [(r["title"], r["artists"], r["bill_rank"], idx) for idx, r in trace_df.iterrows()]
+            custom_data = [
+                (r["title"], r["artists"], r["bill_rank"], r["bill_year"], idx) for idx, r in trace_df.iterrows()
+            ]
             trace = {
                 "name": names[state],
                 "x": trace_df["pca1"],
@@ -100,7 +102,9 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
                 },
             }
             if m:
-                trace["hovertemplate"] = "<b>%{customdata[0]}</b><br>%{customdata[1]}<br>Rank=%{customdata[2]}"
+                trace["hovertemplate"] = "<b>%{customdata[0]}</b><br>" \
+                                         "%{customdata[1]}<br>" \
+                                         "Rank=%{customdata[2]} (%{customdata[3]})"
             else:
                 trace["hoverinfo"] = "skip"
             traces.append(trace)
@@ -134,7 +138,7 @@ content = [
                         {"label": "All", "value": "all"},
                         {"label": "Rock", "value": "rock"},
                         {"label": "Pop", "value": "pop"},
-                        {"label": "Other", "value": "other"},
+                        {"label": "Others", "value": "others"},
                     ],
                     value="all"
                 )
@@ -188,7 +192,7 @@ content = [
 
 title = "The Lyric Constellation"
 
-description = html.Div(id="lyric-description", children="Click an artist")
+description = html.Div(id="lyric-description", children="Click a song to see details.")
 
 
 # CALLBACKS
@@ -209,8 +213,9 @@ def display_figure(lang, genres, ranking_year, search_input, search_radio):
 @app.callback(Output("lyric-description", "children"), [Input("lyric-fig", "clickData")])
 def display_artist_info(click_data):
     if click_data is None or "text" not in click_data["points"][0]:
-        return [html.Div("Click an artist")]
+        return [html.Div("Click a song to see details.")]
     curr_song_id = click_data["points"][0]["text"]
-    curr_df_id = click_data["points"][0]["customdata"][3]
+    curr_df_id = click_data["points"][0]["customdata"][4]
+    curr_df_id = click_data["points"][0]["customdata"][4]
     similars = all_df.loc[curr_df_id]["similar"]
     return get_song_card(curr_song_id, similars)

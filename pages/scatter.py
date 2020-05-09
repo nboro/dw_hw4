@@ -10,7 +10,7 @@ from app import app
 bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
 
 top_df = bill_join_df[bill_join_df["bill_rank"] <= 200][
-    ["artist", "title", "year", "is_dutch", "main_genre", "bill_rank", "bill_year"]].dropna()
+    ["song_id", "artist", "title", "year", "is_dutch", "main_genre", "bill_rank", "bill_year"]].dropna()
 top_df["bill_year_w_jitter"] = top_df["bill_year"].apply(lambda y: y + np.random.normal(0, 0.1))
 
 year_chart_df = top_df.rename(
@@ -52,7 +52,10 @@ content = [
     ]),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id='graph-with-slider', config=graph_settings["config"])
+            dcc.Graph(
+                id='graph-with-slider',
+                figure={"data": [], "layout": graph_settings["layout"]},
+                config=graph_settings["config"])
         ], width=12)
     ]),
     dbc.Row([
@@ -70,7 +73,7 @@ content = [
     ])
 ]
 
-description = html.Div(id='scatter-description', children="Click a dot..")
+description = html.Div(id='scatter-description', children="Click a song to see details.")
 
 
 @app.callback(
@@ -89,8 +92,9 @@ def update_figure(selected_isDutch, bill_rank_lista):
     traces = []
     for i in filtered_year_chart_df['main_genre'].unique():
         df = filtered_year_chart_df[filtered_year_chart_df['main_genre'] == i]
-        custom_data = [(r["title"], r["bill_rank"], idx) for idx, r in
-                       filtered_year_chart_df.iterrows()]
+        custom_data = [
+            (r["title"], r["artist"], r["bill_rank"], r["bill_year"], r["song_id"]) for idx, r in df.iterrows()
+        ]
 
         # ranking_year = str(df.iloc[0]["Ranking Year"])
         # bill_rank = df[0]['bill_rank']
@@ -99,8 +103,9 @@ def update_figure(selected_isDutch, bill_rank_lista):
             type="scattergl",
             x=df["Ranking Year"],
             y=df["Song Release Year"],
-            text= df["title"],
-            hoverinfo = 'text',
+            text=df["title"],
+            hoverinfo='text',
+            hovertemplate='<b>%{customdata[0]}</b><br>%{customdata[1]}<br>Rank=%{customdata[2]} (%{customdata[3]})',
             mode='markers',
             customdata=custom_data,
             opacity=0.7,
@@ -127,28 +132,23 @@ def update_figure(selected_isDutch, bill_rank_lista):
 
 @app.callback(Output("scatter-description", "children"), [Input("graph-with-slider", "clickData")])
 def display_artist(clickData):
-    if clickData:
-        click = clickData['points'][0]
+    #if clickData:
+    #
+    # titlos = click['customdata'][0]
+    # rankyear = round(click['x'])
+    # billrank = click['customdata'][1]
+    #
+    # row1 = html.Tr([html.Td(dcc.Markdown('''**Title is**''')), html.Td(titlos)])
+    # row2 = html.Tr([html.Td(dcc.Markdown('''**Rank Year**''')), html.Td(rankyear)])
+    # row3 = html.Tr([html.Td(dcc.Markdown('''**Bill Rank**''')), html.Td(billrank)])
+    # table_body = [html.Tbody([row1,row2,row3])]
+    # table = dbc.Table(table_body
+    # return html.Div(children=[
+    #     table
+    # ], className="table-responsive")
+    if clickData is None or "customdata" not in clickData["points"][0]:
+        return [html.Div("Click a song to see details.")]
 
-        titlos = click['customdata'][0]
-        rankyear = round(click['x'])
-        billrank = click['customdata'][1]
-
-        # table_header = [html.Thead(html.Tr([html.Th("titlos"), html.Th("rankyear"), html.Th("billrank")]))]
-        row1 = html.Tr([html.Td(dcc.Markdown('''**Title is**''')), html.Td(titlos)])
-        row2 = html.Tr([html.Td(dcc.Markdown('''**Rank Year**''')), html.Td(rankyear)])
-        row3 = html.Tr([html.Td(dcc.Markdown('''**Bill Rank**''')), html.Td(billrank)])
-        # max_key = feature_map[feature]
-        # max_value = features_max[max_key]
-        # title, artist, genre = max_value.split(sep='_')
-        # row2 = html.Tr([html.Td(dcc.Markdown('''
-        #             The song with the highest *''' + feature + '''* is **''' + title + '''** performed by **''' + artist + '''** and belongs to the **''' + genre + '''** genre.'''
-        #                                      ))])
-
-        table_body = [html.Tbody([row1,row2,row3])]
-        # table_body2 = [html.Tbody([row2])]
-        table = dbc.Table(table_body)
-        # table2 = dbc.Table(table_body2, bordered=False, hover=True, responsive=True)
-        return html.Div(children=[
-            table
-        ], className="table-responsive")
+    click = clickData['points'][0]
+    song_id = click["customdata"][4]
+    return get_song_card(song_id)
