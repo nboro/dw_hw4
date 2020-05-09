@@ -48,7 +48,17 @@ content = [
                     value='All'
                 )
             ])
-        ], width=4),
+        ], width=4)
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(
+                id='graph-with-slider',
+                figure={"data": [], "layout": graph_settings["layout"]},
+                config=graph_settings["config"])
+        ], width=12)
+    ]),
+    dbc.Row([
         dbc.Col([
             dbc.Label(children="Top-n:"),
             dcc.Slider(
@@ -60,28 +70,7 @@ content = [
                 step=10,
             ),
         ])
-    ]),
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(
-                id='graph-with-slider',
-                figure={"data": [], "layout": graph_settings["layout"]},
-                config=graph_settings["config"])
-        ], width=12)
-    ]),
-    # dbc.Row([
-    #     dbc.Col([
-    #         dbc.Label(children="Top-n:"),
-    #         dcc.Slider(
-    #             id='rank-slider',
-    #             min=10,
-    #             max=200,
-    #             value=200,
-    #             marks={str(pos): str(pos) for pos in range(10, 201, 10)},
-    #             step=10,
-    #         ),
-    #     ])
-    # ])
+    ])
 ]
 
 description = html.Div(id='scatter-description', children="Click a song to see details.")
