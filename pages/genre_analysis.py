@@ -52,7 +52,6 @@ def group_titles():
 # get template
 graph_settings = get_graph_template()
 graph_settings["layout"]["margin"]["t"] = 50
-graph_settings["layout"]["height"] = 700
 graph_settings["layout"]["legend"] = {
     "x": 0.5,
     "y": -0.1,

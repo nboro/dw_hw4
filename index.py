@@ -72,7 +72,7 @@ def display_page(pathname):
     elif pathname == "/lyrics":
         return lyrics.title, lyrics.content, lyrics.description, \
                get_nav_buttons("oi-media-step-backward", "/features", "oi-home", "/")
-    return "404"
+    return "404", "", "", ""
 
 
 server = app.server
