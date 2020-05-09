@@ -52,6 +52,14 @@ def group_titles():
 # get template
 graph_settings = get_graph_template()
 graph_settings["layout"]["margin"]["t"] = 50
+graph_settings["layout"]["height"] = 700
+graph_settings["layout"]["legend"] = {
+    "x": 0.5,
+    "y": -0.1,
+    "xanchor": "center",
+    "yanchor": "top",
+    "orientation": "h"
+}
 fig.update_layout(graph_settings["layout"])
 fig.update_xaxes(
     range=[1998, 2020],
