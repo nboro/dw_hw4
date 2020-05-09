@@ -4,7 +4,8 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from utils import get_nav_buttons
 from app import app
-from pages import scatter, genre_analysis, features, lyrics
+from pages import scatter, genre_analysis, features, \
+    lyrics, lyrics_intro, lyrics_outro
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -42,7 +43,7 @@ index = {
         html.Br(),
         dcc.Link('Song Features', href='/features'),
         html.Br(),
-        dcc.Link('Lyrics', href='/lyrics')
+        dcc.Link('Lyrics', href='/lyrics/intro')
     ])
 }
 
@@ -68,10 +69,16 @@ def display_page(pathname):
                get_nav_buttons("oi-media-step-backward", "/scatter", "oi-media-step-forward", "/features")
     elif pathname == "/features":
         return features.title, features.content, features.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics")
-    elif pathname == "/lyrics":
+               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
+    elif pathname == "/lyrics/intro":
+        return lyrics_intro.title, lyrics_intro.content, lyrics_intro.description, \
+               get_nav_buttons("oi-media-step-backward", "/features", "oi-media-step-forward", "/lyrics/reff")
+    elif pathname == "/lyrics/reff":
         return lyrics.title, lyrics.content, lyrics.description, \
-               get_nav_buttons("oi-media-step-backward", "/features", "oi-home", "/")
+               get_nav_buttons("oi-media-step-backward", "/lyrics/intro", "oi-media-step-forward", "/lyrics/outro")
+    elif pathname == "/lyrics/outro":
+        return lyrics_outro.title, lyrics_outro.content, lyrics_outro.description, \
+               get_nav_buttons("oi-media-step-backward", "/lyrics/reff", "oi-home", "/")
     return "404", "", "", ""
 
 

@@ -17,6 +17,7 @@ with open(f"data/lyric.json", "r") as f:
 
 # TEMPLATE SETTINGS
 graph_settings = get_graph_template()
+graph_settings["layout"]["height"] = 500
 graph_settings["layout"]["xaxis"]["zeroline"] = False
 graph_settings["layout"]["xaxis"]["fixedrange"] = True
 graph_settings["layout"]["xaxis"]["showgrid"] = False

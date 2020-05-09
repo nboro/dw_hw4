@@ -31,6 +31,10 @@
     color: #EBEBEB;
 }
 
+.rc-slider-disabled {
+    background-color: #4E5D6C;
+}
+
 .icon-orange {
   fill: #DF691A;
 }
@@ -39,4 +43,9 @@
     width: 100%;
     table-layout: fixed;
     overflow-wrap: break-word
+}
+
+.form-control:disabled, .form-control[readonly] {
+    color: #868e96;
+    background-color: #4E5D6C;
 }
