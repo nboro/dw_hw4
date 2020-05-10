@@ -4,19 +4,23 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from utils import get_nav_buttons
 from app import app
-from pages import scatter, genre_analysis, features, \
-    lyrics, lyrics_intro, lyrics_outro
+from pages import (
+    opening,
+    scatter,
+    genre_analysis,
+    features,
+    lyrics, lyrics_intro, lyrics_outro,
+    closing
+)
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dbc.Container([
         dbc.Row([
             dbc.Col(html.Div([
-                html.H3(id="title", children="")
+                html.H3(id="title", children=""),
+                html.Div(id="navs")
             ]), className="text-center"),
-        ]),
-        dbc.Row([
-            dbc.Col(id="navs", width=12, className="text-center")
         ]),
         dbc.Row([
             dbc.Col(
@@ -24,28 +28,10 @@ app.layout = html.Div([
                 children=[],
                 width=9
             ),
-            dbc.Col(
-                id="description",
-                children=[],
-                width=3
-            )
-        ])
+            dbc.Col(id="description", width=3)
+        ]),
     ])
 ])
-
-index = {
-    "title": "We are here for a ride, darling.",
-    "content": html.Img(src=app.get_asset_url('imgs/freddie.png'), className="img-fluid mx-auto"),
-    "description": html.Div([
-        dcc.Link('Main Scatter', href='/scatter'),
-        html.Br(),
-        dcc.Link('Genres', href='/genres'),
-        html.Br(),
-        dcc.Link('Song Features', href='/features'),
-        html.Br(),
-        dcc.Link('Lyrics', href='/lyrics/intro')
-    ])
-}
 
 
 @app.callback(
@@ -59,7 +45,7 @@ index = {
 )
 def display_page(pathname):
     if pathname == "/":
-        return index["title"], index["content"], index["description"], \
+        return opening.title, opening.content, opening.description, \
                get_nav_buttons(None, "#", "oi-media-play", "/scatter")
     elif pathname == "/scatter":
         return scatter.title, scatter.content, scatter.description, \
@@ -78,8 +64,11 @@ def display_page(pathname):
                get_nav_buttons("oi-media-step-backward", "/lyrics/intro", "oi-media-step-forward", "/lyrics/outro")
     elif pathname == "/lyrics/outro":
         return lyrics_outro.title, lyrics_outro.content, lyrics_outro.description, \
-               get_nav_buttons("oi-media-step-backward", "/lyrics/reff", "oi-home", "/")
-    return "404", "", "", ""
+               get_nav_buttons("oi-media-step-backward", "/lyrics/reff", "oi-media-step-forward", "/encore")
+    elif pathname == "/encore":
+        return closing.title, closing.content, closing.description, \
+               get_nav_buttons("oi-media-step-backward", "/lyrics/outro", "oi-home", "/")
+    return opening.title, opening.content, opening.description, get_nav_buttons(None, "#", "oi-media-play", "/scatter")
 
 
 server = app.server
