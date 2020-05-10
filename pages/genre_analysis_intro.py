@@ -20,7 +20,7 @@ era_col = {
     "2000s": "#d9534f"
 }
 
-fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Genre: Rock', '', ''))
+fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Rock', '', ''))
 
 title = "Most Popular Songs in each Genre"
 
