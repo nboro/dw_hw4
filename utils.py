@@ -118,7 +118,7 @@ def get_lyric_snippet(song_data):
     lyric_row = []
     lyric_snippet = [snippet for snippet in song_data["lyric_snippet"][:100].split("|") if snippet]
     for i, lyric in enumerate(lyric_snippet):
-        if i < len( lyric_snippet ) - 1:
+        if i < len(lyric_snippet) - 1:
             lyric_row += [html.Small(html.Em(lyric)), html.Br()]
         else:
             lyric_row.append(html.Small(html.Em(lyric + "...")))

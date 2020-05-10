@@ -31,8 +31,8 @@ graph_settings["layout"]["legend"] = {
         "text": "Song Release Year"
     },
     "x": 0,
-    "y": 1,
-    "xanchor": "left",
+    "y": 0,
+    "xanchor": "center",
     "yanchor": "top"
 }
 
@@ -216,7 +216,6 @@ def display_artist_info(click_data):
     if click_data is None or "text" not in click_data["points"][0]:
         return [html.Div("Click a song to see details.")]
     curr_song_id = click_data["points"][0]["text"]
-    curr_df_id = click_data["points"][0]["customdata"][4]
     curr_df_id = click_data["points"][0]["customdata"][4]
     similars = all_df.loc[curr_df_id]["similar"]
     return get_song_card(curr_song_id, similars)

@@ -22,6 +22,9 @@ era_col = {
 
 fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Rock', 'Pop', 'Soul'))
 
+title = "Most Popular Songs in each Genre"
+
+description = "Lorem Ipsum"
 
 def grouped_df(value):
     specific = sample_set.loc[sample_set['genre'] == value]
@@ -70,7 +73,7 @@ fig.update_xaxes(
     tickvals=[2000, 2010, 2020]
 )
 fig.update_yaxes(
-    autorange="reversed",
+    range=[2050, 0],
     color="#EBEBEB",
     gridcolor="#4E5D6C",
     automargin=True,

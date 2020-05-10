@@ -16,43 +16,56 @@ with open(f"data/lyric.json", "r") as f:
 
 # FUNCTIONS
 def get_figure():
+    chosen_song_ids = [
+        "en_0",  # Bohemian Rhapsody
+        "en_315",  # Imagine
+        "en_126"  # Deep Purple
+    ]
     layout_settings = deepcopy(graph_settings["layout"])
-    lyric_df = all_df[all_df.index.str.contains("en")].copy()
+    layout_settings["xaxis"]["range"] = [-0.5, 0.7]
+    layout_settings["yaxis"]["range"] = [-0.35, 0.65]
+    lyric_df = all_df[(all_df["bill_year"] == 1999) & all_df.index.str.contains("en")].copy()
 
     traces = []
-    names = {
-        "oldies": "1920-1989",
-        "90s": "1990-1999",
-        "2000s": "2000-2019"
+    colors = {
+        "oldies": "#f0ad4e",
+        "90s": "#5bc0de"
     }
-    for i, state in enumerate(["oldies", "90s", "2000s"]):
-        trace_df = lyric_df[lyric_df["era"] == state]
+    for m in [True, False]:
+        trace_df = lyric_df[lyric_df.index.isin(chosen_song_ids)] if m \
+            else lyric_df[~lyric_df.index.isin(chosen_song_ids)]
         custom_data = [
             (r["title"], r["artists"], r["bill_rank"], r["bill_year"], idx) for idx, r in trace_df.iterrows()
         ]
         trace = {
-            "name": names[state],
+            "name": "",
             "x": trace_df["pca1"],
             "y": trace_df["pca2"],
-            "mode": "markers",
-            "text": trace_df["song_id"],
+            "mode": "markers+text" if m else "markers",
+            "text": trace_df["title"],
+            "textposition": "top center",
+            "showlegend": False,
             "customdata": custom_data,
-            "hovertemplate": "<b>%{customdata[0]}</b><br> %{customdata[1]}<br> "
-                             "Rank=%{customdata[2]} (%{customdata[3]})",
             "marker": {
                 "symbol": "circle",
+                "color": trace_df["era"].apply(lambda era: colors[era]),
                 "size": 11,
-                "opacity": 0.8,
+                "opacity": 0.8 if m else 0.1,
                 "line": {
                     "width": 0.5,
                     "color": "#2B3E50"
                 }
             },
         }
+        if m:
+            trace["hovertemplate"] = "<b>%{customdata[0]}</b><br>" \
+                                     "%{customdata[1]}<br>" \
+                                     "Rank=%{customdata[2]} (%{customdata[3]})"
+        else:
+            trace["hoverinfo"] = "skip"
         traces.append(trace)
-
     figure = {
-        "data": [],
+        "data": traces,
         "layout": layout_settings
     }
     return dcc.Graph(id="lyric-fig", figure=figure, config=graph_settings["config"])
