@@ -10,6 +10,18 @@ song_features = [
     'feature_liveness', 'feature_valence'
 ]
 
+feature_desc = {
+    'Valence':'Musical positiveness (e.g. happy, cheerful, euphoric) conveyed by a track.'
+    ,'Liveness':'The presence of an audience in the recording.'
+    ,'Instrumentalness':'Whether a track contains no vocals.' 
+    ,'Speechiness':'The presence of spoken words in a track.'
+    ,'Energy':'	Perceptual measure of intensity and activity.'
+    ,'Danceability':'How suitable a track is for dancing.'       
+    ,'Tempo':'The overall estimated tempo of a track in beats per minute (BPM).'
+    ,'Loudness':'The overall loudness of a track in decibels (dB).'
+    # ,'Mainstream': 'The number of followers of the artis on spotify'
+    ,'Duration':'The duration of the song'
+}
 
 def get_graph_template():
     return {
@@ -265,6 +277,68 @@ def get_song_card(song_id, similars=None):
 
     return dbc.Card(card_contents, style={"width": "18rem"})
 
+def get_song_card_feature(song_id, feature,feature_desc,era,song_id2,era2,similars=None):
+    with open("data/song_card.json", "r") as f_in:
+        songs = json.load(f_in)
+    song_data = songs[song_id]
+    artists = song_data["artists"]
+    title = song_data["title"]
+    genre = song_data["main_genre"]
+    # hp = song_data["hp"]
+
+    song_data2 = songs[song_id2]
+    artist2 = song_data2["artists"]
+    title2 = song_data2["title"]
+
+    first_artist_img = song_data["first_artist_img"]
+    second_artist_img = song_data2["first_artist_img"]
+
+    table_text = dcc.Markdown('''The song with the highest *'''+feature+'''* in the era **'''+ era+ '''** ''' +''' is:''')
+    # table_text = dbc.Table(table_text_body,bordered=False)
+    message_text =''
+
+    card_contents = [
+        dbc.CardHeader([
+            html.H4(html.Strong(feature, className="card-title text-info")),
+            html.H6(feature_desc, className="card-subtitle")
+        ]),
+        dbc.CardBody([
+            html.Table([html.Tr([html.Td(table_text)])], className="card-table"),
+            html.Img(src=first_artist_img, height=125, alt="Artist Image",
+                className="card-text border mx-auto d-block",style={'margin-bottom':'15px'}),
+            html.Table([
+                html.Tr([html.Td(html.Strong("Song Title", className="text-info")), html.Td(title)]),
+                html.Tr([html.Td(html.Strong("Performed by", className="text-info")), html.Td(artists)]),
+                html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
+            ], className="card-table")
+        ])
+    ]
+    if song_id == song_id2:
+        message_text = dcc.Markdown('''This is also the song with the highest *'''+feature+'''* among **ALL eras**.''')
+        card_contents += [
+            dbc.CardBody([
+                html.Table([html.Tr([html.Td(message_text)])], className="card-table"),
+            ]),
+        ]
+    else:
+        message_text = dcc.Markdown('''The song with the highest *'''+feature+'''* among **ALL eras** is:''')
+        card_contents += [
+            dbc.CardBody([
+                html.Table([html.Tr([html.Td(message_text)])], className="card-table"),
+                html.Img(src=second_artist_img, height=125, alt="Artist Image",
+                     className="card-text border mx-auto d-block",style={'margin-bottom':'15px'}
+                     ),
+                html.Table([
+                    html.Tr([html.Td(html.Strong("Song Title", className="text-info")), html.Td(title2)]),
+                    html.Tr([html.Td(html.Strong("Performed by", className="text-info")), html.Td(artist2)]),
+                    html.Tr([html.Td(html.Strong("Era", className="text-info")), html.Td(era2)]),
+                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
+                ], className="card-table")
+            ]),
+        ]
+
+    return dbc.Card(card_contents, style={"width": "18rem"})
+
 
 def create_initial_era_df(df):
 
@@ -307,7 +381,7 @@ def get_max_each_feature(df,era,genre,origin):
         df_filtered = df[df['is_dutch'] == origin]
     else:
         df_filtered = df
-        
+
     df_filtered = df_filtered[df_filtered['main_genre'] == genre]
 
     df_filtered2 = df_filtered[df_filtered['era'] == era]
@@ -315,8 +389,9 @@ def get_max_each_feature(df,era,genre,origin):
     for feature in song_features:
         # print(feature)
         row = df_filtered2.loc[df_filtered2[feature].idxmax()]        
-        max_songs[feature] = row['title']+ '_'+row['artist']+'_'+row['main_genre']
+        max_songs[feature] = row['song_id']
+
         row_general = df_filtered.loc[df_filtered[feature].idxmax()]
-        max_songs_general[feature] = row_general['title']+ '_'+row_general['artist']+'_'+row_general['main_genre']+'_'+row_general['era']
+        max_songs_general[feature] = row_general['era']+'_'+row_general['song_id']
     
     return max_songs,max_songs_general

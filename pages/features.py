@@ -8,7 +8,7 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import generate_table,create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template
+from utils import generate_table,create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
 from app import app
 
 
@@ -208,36 +208,42 @@ def update_figure_genre(selected_genre, selected_origin):
 def display_feature_text(clickData):
     if clickData is None or "y" not in clickData["points"][0]:
         return [html.Div("Click a dot to see details.")]
-    display2row = 'table-cell'
+    
     click = clickData['points'][0]
     era = click['customdata'][0]
     genre = click['customdata'][1]
     origin = click['customdata'][2]
     era_mapped = era_map[era]
     feature = click['y']
-    table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
-    row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
+    feature_descr = feature_desc[feature]
 
+    # table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
+    # row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
     max_key = feature_map[feature]
     max_val,max_val_general = get_max_each_feature(bill_join_df,era_mapped,genre,origin)
     max_value = max_val[max_key]
-    title, artist, genre = max_value.split(sep='_')
+    song_id = max_value
+
     max_value_general = max_val_general[max_key]
-    title2, artist2, genre2,era22 = max_value_general.split(sep='_')
-    era2 = get_key(era22)
-    if title == title2:
-        display2row='none'
+    era22,song_id2 = max_value_general.split('_',1)
     
-    row2 = html.Tr([html.Td(dcc.Markdown('''
-                The song with the highest *'''+feature+'''* in the era **'''+ era+ '''** ''' +''' is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
-            ))])
-    row3 = html.Tr([html.Td(dcc.Markdown('''
-                The song with the highest *'''+feature+'''* among **ALL eras** is **'''+ title2+ '''** ''' +''' belongs to the era **'''+era2+'''** , is performed by **'''+artist2+'''** and belongs to the **'''+genre2+'''** genre.'''
-            ))],style = {'display':display2row})
-    table_body = [html.Tbody([row1])]
-    table_body2 = [html.Tbody([row2,row3])]
-    table = dbc.Table(table_header + table_body)
-    table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
-    return html.Div(children=[
-        table,table2
-    ], className="table-responsive")
+    era2 = get_key(era22)
+    # text = ''
+    # if title == title2:
+    #     text = dcc.Markdown('''
+    #             This is also the song with the highest *'''+feature+'''* among **ALL eras**.'''
+    #         )
+    # else:
+    #     text = dcc.Markdown('''
+    #             The song with the highest *'''+feature+'''* among **ALL eras** is **'''+ title2+ '''** ''' +''' belongs to the era **'''+era2+'''** , is performed by **'''+artist2+'''** and belongs to the **'''+genre2+'''** genre.'''
+    #         )
+    
+    # row2 = html.Tr([html.Td(dcc.Markdown('''
+    #             The song with the highest *'''+feature+'''* in the era **'''+ era+ '''** ''' +''' is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
+    #         ))])
+    # row3 = html.Tr([html.Td(text)])
+    # table_body = [html.Tbody([row1])]
+    # table_body2 = [html.Tbody([row2,row3])]
+    # table = dbc.Table(table_header + table_body)
+    # table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
+    return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2)
