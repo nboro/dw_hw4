@@ -20,7 +20,7 @@ era_col = {
     "2000s": "#d9534f"
 }
 
-fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Genre: Rock', 'Genre: Pop', 'Genre: Soul'))
+fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Rock', 'Pop', 'Soul'))
 
 
 def grouped_df(value):
@@ -59,7 +59,8 @@ graph_settings["layout"]["legend"] = {
     "yanchor": "top",
     "orientation": "h"
 }
-fig.update_layout(graph_settings["layout"])
+fig.update_layout(graph_settings["layout"],
+                  yaxis_title="Billboard ranking")
 fig.update_xaxes(
     range=[1998, 2020],
     color="#EBEBEB",
