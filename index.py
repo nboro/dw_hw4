@@ -8,7 +8,7 @@ from pages import (
     opening,
     scatter,
     genre_analysis,
-    features,
+    features,features_intro,features_outro,
     lyrics, lyrics_intro, lyrics_outro,
     closing
 )
@@ -53,8 +53,14 @@ def display_page(pathname):
     elif pathname == "/genres":
         return "Genres", genre_analysis.content, "", \
                get_nav_buttons("oi-media-step-backward", "/scatter", "oi-media-step-forward", "/features")
-    elif pathname == "/features":
+    elif pathname == "/features/intro":
+        return features_intro.title, features_intro.content, features_intro.description, \
+               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
+    elif pathname == "/features/reff":
         return features.title, features.content, features.description, \
+               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
+    elif pathname == "/features/outro":
+        return features_outro.title, features_outro.content, features_outro.description, \
                get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
     elif pathname == "/lyrics/intro":
         return lyrics_intro.title, lyrics_intro.content, lyrics_intro.description, \

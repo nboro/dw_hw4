@@ -8,7 +8,7 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import generate_table,create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
+from utils import create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
 from app import app
 
 
@@ -179,18 +179,29 @@ def update_figure_genre(selected_genre, selected_origin):
     create_initial_era_df(filtered_genre)
     best_era_df = create_era_df(filtered_genre)
 
+    best_era_df = best_era_df.reset_index(drop=True)
+    best_era_df['Compared to Oldies (Song Released < 1990)'] = round(best_era_df['Compared to Oldies (Song Released < 1990)'],1)
+
     traces = []
+    
     for i in best_era_df['Song Era'].unique():
         df = best_era_df[best_era_df['Song Era'] == i]
-
-        custom_data = [(row['Song Era'],selected_genre,selected_origin) for idx, row in df.iterrows()]
-
+        
+        custom_data = [(row['Song Era'],selected_genre,selected_origin) for idx, row in df.iterrows()] 
+        
+        diff = ''
+        if i == '1920-1989':
+            diff = 'The era of the point of comparison'
+        else:    
+            text = str(round(df.iloc[0]['Compared to Oldies (Song Released < 1990)'],1))
+            diff = 'The difference from the oldest era is '+text+'%'
+        
         traces.append(dict(
             x=df['Compared to Oldies (Song Released < 1990)'],
             y=df['Song Features'],
-            # text= df["title"],
+            text= diff,
             mode='markers',
-            # color=,
+            hoverinfo='text+x',
             opacity=0.7,
             customdata = custom_data,
             marker=dict(
