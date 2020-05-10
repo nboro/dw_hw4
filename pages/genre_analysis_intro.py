@@ -72,6 +72,7 @@ fig.update_xaxes(
     tickvals=[2000, 2010, 2020]
 )
 fig.update_yaxes(
+    title="Billboard ranking",
     range=[2050, 0],
     color="#EBEBEB",
     gridcolor="#4E5D6C",
