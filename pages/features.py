@@ -35,7 +35,9 @@ bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
 bill_join_df = bill_join_df.dropna(subset=['main_genre','is_dutch','era'])
 bill_join_df = bill_join_df.drop(columns=['followers'],axis =1)
 
-genres = bill_join_df['main_genre'].unique().tolist()
+bill_join_df['main_genre'] = bill_join_df['main_genre'].apply(lambda g: g if g in ["rock", "pop"] else "others")
+# genres = bill_join_df['main_genre'].unique().tolist()
+# genres.append("All")
 
 bill_join_df.is_dutch = bill_join_df.is_dutch.map({True:'Dutch', False:'International'})
 origin_list = bill_join_df.is_dutch.unique().tolist()
@@ -63,9 +65,9 @@ feature_desc = {
     ,'Duration':'The duration of the song'
 }
 
-features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
-features_descriptions = features_descriptions.reset_index()
-features_descriptions = features_descriptions.rename(columns={0:'Feature description','index':'Features'})
+# features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
+# features_descriptions = features_descriptions.reset_index()
+# features_descriptions = features_descriptions.rename(columns={0:'Feature description','index':'Features'})
 
 # features_max = get_max_each_feature(bill_join_df)
 
@@ -105,7 +107,7 @@ content = [
                 dbc.Select(
                     id="genres",
                     options=[{'label': 'rock', 'value': 'rock'}],  # TODO fix this with correct initial value list
-                    value='rock'
+                    value='All'
                 )
             ])
         ], width=4)
@@ -139,7 +141,10 @@ def update_genre(selected_origin):
     else:
         filtered_genre = bill_join_df
 
-    return [{'label': i, 'value': i} for i in list(filtered_genre.main_genre.unique())]
+    genre_list = list(filtered_genre.main_genre.unique())
+    genre_list.append('All')
+
+    return [{'label': i, 'value': i} for i in genre_list]
 
 @app.callback(
     Output('genres', 'value'),
@@ -148,7 +153,7 @@ def update_genre(selected_origin):
     ])
 def set_genre(available_options):
 
-    return available_options[0]['value']
+    return available_options[3]['value']
 
 #song feature graph
 @app.callback(
@@ -164,8 +169,12 @@ def update_figure_genre(selected_genre, selected_origin):
     else:
         filtered_genre = bill_join_df
 
-    filtered_genre = filtered_genre[filtered_genre['main_genre'] == selected_genre]
-    
+    if selected_genre in ("rock", "pop"):
+        filtered_genre = filtered_genre[filtered_genre["main_genre"] == selected_genre]
+    elif selected_genre == "others":
+        filtered_genre = filtered_genre[~filtered_genre["main_genre"].isin(["rock", "pop"])]
+
+    # filtered_genre = filtered_genre[filtered_genre['main_genre'] == selected_genre]   
 
     create_initial_era_df(filtered_genre)
     best_era_df = create_era_df(filtered_genre)
@@ -222,10 +231,10 @@ def display_feature_text(clickData):
     max_key = feature_map[feature]
     max_val,max_val_general = get_max_each_feature(bill_join_df,era_mapped,genre,origin)
     max_value = max_val[max_key]
-    song_id = max_value
+    feature_max,song_id = max_value.split('_',1)
 
     max_value_general = max_val_general[max_key]
-    era22,song_id2 = max_value_general.split('_',1)
+    era22,feature_max_general,song_id2 = max_value_general.split('_',2)
     
     era2 = get_key(era22)
     # text = ''
@@ -246,4 +255,4 @@ def display_feature_text(clickData):
     # table_body2 = [html.Tbody([row2,row3])]
     # table = dbc.Table(table_header + table_body)
     # table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
-    return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2)
+    return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2,feature_max,feature_max_general)
