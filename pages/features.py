@@ -234,7 +234,7 @@ def display_feature_text(clickData):
     feature_max,song_id = max_value.split('_',1)
 
     max_value_general = max_val_general[max_key]
-    era22,feature_max_general,song_id2 = max_value_general.split('_',2)
+    era22,feature_max_general,genre2,song_id2 = max_value_general.split('_',3)
     
     era2 = get_key(era22)
     # text = ''
@@ -255,4 +255,4 @@ def display_feature_text(clickData):
     # table_body2 = [html.Tbody([row2,row3])]
     # table = dbc.Table(table_header + table_body)
     # table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
-    return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2,feature_max,feature_max_general)
+    return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2,feature_max,feature_max_general,genre2)

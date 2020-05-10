@@ -277,7 +277,7 @@ def get_song_card(song_id, similars=None):
 
     return dbc.Card(card_contents, style={"width": "18rem"})
 
-def get_song_card_feature(song_id, feature,feature_desc,era,song_id2,era2,feature_max,feature_max_general):
+def get_song_card_feature(song_id, feature,feature_desc,era,song_id2,era2,feature_max,feature_max_general,genre2):
     with open("data/song_card.json", "r") as f_in:
         songs = json.load(f_in)
     
@@ -335,7 +335,7 @@ def get_song_card_feature(song_id, feature,feature_desc,era,song_id2,era2,featur
                     html.Tr([html.Td(html.Strong("Performed by", className="text-info")), html.Td(artist2)]),
                     html.Tr([html.Td(html.Strong(feature+' value', className="text-info")), html.Td(feature_max_general)]),
                     html.Tr([html.Td(html.Strong("Era", className="text-info")), html.Td(era2)]),
-                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre)]),
+                    html.Tr([html.Td(html.Strong("Genre", className="text-info")), html.Td(genre2)]),
                 ], className="card-table")
             ]),
         ]
@@ -400,6 +400,6 @@ def get_max_each_feature(df,era,genre,origin):
         max_songs[feature] = str(round(row[feature],3))+'_'+row['song_id']
 
         row_general = df_filtered.loc[df_filtered[feature].idxmax()]
-        max_songs_general[feature] = row_general['era']+'_'+str(round(row_general[feature],3))+'_'+row_general['song_id']
+        max_songs_general[feature] = row_general['era']+'_'+str(round(row_general[feature],3))+'_'+row_general['main_genre']+'_'+row_general['song_id']
     
     return max_songs,max_songs_general
