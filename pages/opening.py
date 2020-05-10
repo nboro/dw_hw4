@@ -18,9 +18,9 @@ description = html.Div([
     html.P("""
     Necessitatibus ut quibusdam qui illo quae asperiores suscipit. Dicta expedita dolorem dolore. Velit eligendi in minima temporibus commodi cumque. Aliquid adipisci velit repellendus. Non velit excepturi quam necessitatibus nihil reprehenderit non id. Blanditiis ducimus et aut iste veritatis.
     """),
-    dcc.Link('Main Scatter', href='/scatter'),
+    dcc.Link('Main Scatter', href='/scatter/intro'),
     html.Br(),
-    dcc.Link('Genres', href='/genres'),
+    dcc.Link('Genres', href='/genres/intro'),
     html.Br(),
     dcc.Link('Song Features', href='/features'),
     html.Br(),

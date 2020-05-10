@@ -6,8 +6,8 @@ from utils import get_nav_buttons
 from app import app
 from pages import (
     opening,
-    scatter,
-    genre_analysis,
+    scatter, scatter_intro, scatter_outro,
+    genre_analysis, genre_analysis_intro,
     features,
     lyrics, lyrics_intro, lyrics_outro,
     closing
@@ -46,13 +46,22 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname == "/":
         return opening.title, opening.content, opening.description, \
-               get_nav_buttons(None, "#", "oi-media-play", "/scatter")
-    elif pathname == "/scatter":
+               get_nav_buttons(None, "#", "oi-media-play", "/scatter/intro")
+    elif pathname == "/scatter/intro":
+        return scatter_intro.title, scatter_intro.content, scatter_intro.description, \
+               get_nav_buttons("oi-media-step-backward", "/", "oi-media-step-forward", "/scatter/reff")
+    elif pathname == "/scatter/reff":
         return scatter.title, scatter.content, scatter.description, \
-               get_nav_buttons("oi-media-step-backward", "/", "oi-media-step-forward", "/genres")
-    elif pathname == "/genres":
-        return "Genres", genre_analysis.content, "", \
-               get_nav_buttons("oi-media-step-backward", "/scatter", "oi-media-step-forward", "/features")
+               get_nav_buttons("oi-media-step-backward", "/scatter/intro", "oi-media-step-forward", "/scatter/outro")
+    elif pathname == "/scatter/outro":
+        return scatter_outro.title, scatter_outro.content, scatter_outro.description, \
+               get_nav_buttons("oi-media-step-backward", "/scatter/reff", "oi-media-step-forward", "/genres/intro")
+    elif pathname == "/genres/intro":
+        return genre_analysis_intro.title, genre_analysis_intro.content, genre_analysis_intro.description, \
+               get_nav_buttons("oi-media-step-backward", "/scatter/outro", "oi-media-step-forward", "/genres/reff")
+    elif pathname == "/genres/reff":
+        return genre_analysis.title, genre_analysis.content, genre_analysis.description, \
+               get_nav_buttons("oi-media-step-backward", "/genres/intro", "oi-media-step-forward", "/features")
     elif pathname == "/features":
         return features.title, features.content, features.description, \
                get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
@@ -68,7 +77,8 @@ def display_page(pathname):
     elif pathname == "/encore":
         return closing.title, closing.content, closing.description, \
                get_nav_buttons("oi-media-step-backward", "/lyrics/outro", "oi-home", "/")
-    return opening.title, opening.content, opening.description, get_nav_buttons(None, "#", "oi-media-play", "/scatter")
+    return opening.title, opening.content, opening.description, \
+           get_nav_buttons(None, "#", "oi-media-play", "/scatter/intro")
 
 
 server = app.server
