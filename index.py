@@ -6,15 +6,9 @@ from utils import get_nav_buttons
 from app import app
 from pages import (
     opening,
-<<<<<<< HEAD
-    scatter,
-    genre_analysis,
-    features,features_intro,features_outro,
-=======
     scatter, scatter_intro, scatter_outro,
     genre_analysis, genre_analysis_intro,
-    features,
->>>>>>> 19e22a818fac38113c5f53fe4b676e59a8be9dbf
+    features,features_intro,features_outro,
     lyrics, lyrics_intro, lyrics_outro,
     closing
 )
@@ -58,21 +52,6 @@ def display_page(pathname):
                get_nav_buttons("oi-media-step-backward", "/", "oi-media-step-forward", "/scatter/reff")
     elif pathname == "/scatter/reff":
         return scatter.title, scatter.content, scatter.description, \
-<<<<<<< HEAD
-               get_nav_buttons("oi-media-step-backward", "/", "oi-media-step-forward", "/genres")
-    elif pathname == "/genres":
-        return "Genres", genre_analysis.content, "", \
-               get_nav_buttons("oi-media-step-backward", "/scatter", "oi-media-step-forward", "/features")
-    elif pathname == "/features/intro":
-        return features_intro.title, features_intro.content, features_intro.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
-    elif pathname == "/features/reff":
-        return features.title, features.content, features.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
-    elif pathname == "/features/outro":
-        return features_outro.title, features_outro.content, features_outro.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres", "oi-media-step-forward", "/lyrics/intro")
-=======
                get_nav_buttons("oi-media-step-backward", "/scatter/intro", "oi-media-step-forward", "/scatter/outro")
     elif pathname == "/scatter/outro":
         return scatter_outro.title, scatter_outro.content, scatter_outro.description, \
@@ -83,10 +62,15 @@ def display_page(pathname):
     elif pathname == "/genres/reff":
         return genre_analysis.title, genre_analysis.content, genre_analysis.description, \
                get_nav_buttons("oi-media-step-backward", "/genres/intro", "oi-media-step-forward", "/features")
-    elif pathname == "/features":
+    elif pathname == "/features/intro":
+        return features_intro.title, features_intro.content, features_intro.description, \
+               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
+    elif pathname == "/features/reff":
         return features.title, features.content, features.description, \
                get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
->>>>>>> 19e22a818fac38113c5f53fe4b676e59a8be9dbf
+    elif pathname == "/features/outro":
+        return features_outro.title, features_outro.content, features_outro.description, \
+               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
     elif pathname == "/lyrics/intro":
         return lyrics_intro.title, lyrics_intro.content, lyrics_intro.description, \
                get_nav_buttons("oi-media-step-backward", "/features", "oi-media-step-forward", "/lyrics/reff")
