@@ -66,13 +66,6 @@ feature_desc = {
     ,'Duration':'The duration of the song'
 }
 
-# features_descriptions = pd.DataFrame.from_dict(feature_desc,orient='index')
-# features_descriptions = features_descriptions.reset_index()
-# features_descriptions = features_descriptions.rename(columns={0:'Feature description','index':'Features'})
-
-# features_max = get_max_each_feature(bill_join_df)
-
-# color_sequence=["#bdbdbd", "#9ecae1", "#3182bd"]
 color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
 
 
@@ -238,8 +231,6 @@ def display_feature_text(clickData):
     feature = click['y']
     feature_descr = feature_desc[feature]
 
-    # table_header = [html.Thead(html.Tr([html.Th("Feature Title"), html.Th("Feature Description")]))]
-    # row1 = html.Tr([html.Td(feature), html.Td(feature_desc[feature])])
     max_key = feature_map[feature]
     max_val,max_val_general = get_max_each_feature(bill_join_df,era_mapped,genre,origin)
     max_value = max_val[max_key]
@@ -249,22 +240,5 @@ def display_feature_text(clickData):
     era22,feature_max_general,genre2,song_id2 = max_value_general.split('_',3)
     
     era2 = get_key(era22)
-    # text = ''
-    # if title == title2:
-    #     text = dcc.Markdown('''
-    #             This is also the song with the highest *'''+feature+'''* among **ALL eras**.'''
-    #         )
-    # else:
-    #     text = dcc.Markdown('''
-    #             The song with the highest *'''+feature+'''* among **ALL eras** is **'''+ title2+ '''** ''' +''' belongs to the era **'''+era2+'''** , is performed by **'''+artist2+'''** and belongs to the **'''+genre2+'''** genre.'''
-    #         )
     
-    # row2 = html.Tr([html.Td(dcc.Markdown('''
-    #             The song with the highest *'''+feature+'''* in the era **'''+ era+ '''** ''' +''' is **'''+title+'''** performed by **'''+artist+'''** and belongs to the **'''+genre+'''** genre.'''
-    #         ))])
-    # row3 = html.Tr([html.Td(text)])
-    # table_body = [html.Tbody([row1])]
-    # table_body2 = [html.Tbody([row2,row3])]
-    # table = dbc.Table(table_header + table_body)
-    # table2 = dbc.Table(table_body2, bordered=False,hover=True,responsive=True)
     return get_song_card_feature(song_id, feature,feature_descr,era,song_id2,era2,feature_max,feature_max_general,genre2)

@@ -19,25 +19,18 @@ content = [
 title = "Comparing Features of Different Song Eras (based on Spotify API)"
 
 description = html.Div(children=[
-    html.H5("Measuring lyric diversity across different genres and song eras", className="text-info"),
-    html.P("""
-        This chart represents songs' similarity based on their lyrics. 
-        Each dot is a song and the closer they are in the graph, 
-        the more similar the lyrics are. 
-    """),
-    html.P("""
-        Similarity is measured by converting the words in the lyrics to number representation with embeddings and PCA,
-        for nerds go see this page (put a link here)
-    """),
-    html.P("""
-        For instance, Bohemian Rhapsody is more similar to Imagine than Child in Time. 
-        Child in Time is far from the center, 
-        which indicates low degree of similarity with the rest of the songs in 1999. 
-    """),
-    html.H5("Try it yourself!", className="text-info"),
-    html.P("""
-        What happened over the ranking years? Are there more outlier songs or mainstream ones? 
-        Do you see the same trend for Dutch songs? How about other genres?
-    """)
+    html.H5("Do you recognize any trend..?", className="text-info"),
+    dcc.Markdown('''***Valence*** appears to be significantly higher in the oldest era in almost all cases. This means older songs are more positive and probably that is why people prefer them.''',className="text-justify"),
+    dcc.Markdown("""
+        ***Speechiness*** follows the same pattern as valence. This means that probably lyrics in older songs are more positive. To support this we can observe that the instrumentalness is significantly lower in the more recent eras suggesting that although recent era songs contain more vocals probably they are less positive or people prefer short and simple.
+    """,className="text-justify"),
+    dcc.Markdown("""
+        ***Energy***, ***Danceability*** and ***Tempo*** do not appear to have considerable differences suggesting that songs probably have not changed that much throughout the years and the reason for people’s preferences probably does not lie there. 
+    """,className="text-justify"),
+    # html.H5("Try it yourself!", className="text-info"),
+    # html.P("""
+    #     What happened over the ranking years? Are there more outlier songs or mainstream ones? 
+    #     Do you see the same trend for Dutch songs? How about other genres?
+    # """,className="text-justify)
 ])
 
