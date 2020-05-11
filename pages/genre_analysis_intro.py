@@ -56,16 +56,17 @@ def group_titles():
         specific = grouped_df(genree)
         for namex, group in specific.groupby('title'):
             era = group.era[0]
+            era_year = group.era_year[0]
             line_color = era_col.get(str(era))
             fig.add_trace(go.Scatter(x=list(group.bill_year),
                                      y=list(group.bill_ranking),
-                                     legendgroup=era,
-                                     name=era,
+                                     legendgroup=era_year,
+                                     name=era_year,
                                      visible=True, text=namex,
-                                     line=dict(width=2, color=line_color), showlegend=era not in legend_names,
+                                     line=dict(width=2, color=line_color), showlegend=era_year not in legend_names,
                                      mode='lines', hoverinfo='x+y+text+name'),
                           row=1, col=i)
-            legend_names.add(era)
+            legend_names.add(era_year)
         i += 1
 
 
