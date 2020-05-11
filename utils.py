@@ -343,6 +343,19 @@ def get_song_card_feature(song_id, feature,feature_desc,era,song_id2,era2,featur
     return dbc.Card(card_contents, style={"width": "18rem"})
 
 
+def get_toast_hint():
+    return dbc.Toast(
+        [
+            html.P([
+                "The dots are at your service.", html.Br(),
+                "Go ahead and click a dot to see more details."
+            ], className="mb-0")
+        ],
+        header="Interactive dots alert!",
+        dismissable=True
+    )
+
+
 def create_initial_era_df(df):
 
     era_df = df.groupby(["title", "era", "hp"]).count().reset_index()[["title", "era", "hp", "artist"]].rename(columns={"artist": "count"})

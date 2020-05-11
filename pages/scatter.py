@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from utils import get_graph_template, get_song_card
+from utils import get_graph_template, get_song_card, get_toast_hint
 from app import app
 
 bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
@@ -73,7 +73,7 @@ content = [
     ])
 ]
 
-description = html.Div(id='scatter-description', children="Click a song to see details.")
+description = html.Div(id='scatter-description', children=get_toast_hint())
 
 
 @app.callback(
@@ -147,7 +147,7 @@ def display_artist(clickData):
     #     table
     # ], className="table-responsive")
     if clickData is None or "customdata" not in clickData["points"][0]:
-        return [html.Div("Click a song to see details.")]
+        return get_toast_hint()
 
     click = clickData['points'][0]
     song_id = click["customdata"][4]

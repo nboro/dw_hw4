@@ -152,20 +152,23 @@ content = [
 title = "The Lyric Constellation"
 
 description = html.Div(children=[
-    html.H5("Do you find any pattern?", className="text-info"),
-    html.H6("Here is what we think about the English song lyrics", className="text-muted"),
+    html.H5("Do you recognize any trend?", className="text-info"),
     html.P("""
-        Based on the distribution, 
-        there is no clear distinction between eras but the diversity is interesting to observe. 
-        We can see that the songs from before 1990 are more diverse in terms of lyrics.
-        This is more apparent in the Rock genre, where Pyscho by Muse is the furthest from the mean, 
-        which barely make it to the top 200 in 2016. 
+        We can group each era into a single data point each, represented by a star of different colors.
+        The most crowded area for each era is inside each ellipse with the same color.
     """),
-    html.H6("As for the Dutch songs...", className="text-muted"),
+    html.H6("Look at the stars for the English songs", className="text-muted"),
     html.P("""
-        The distribution is more polarized, especially between songs before 1990 and the 90s. 
-        One in the far left is “Zeg me dat het niet zo is” and in the far right is “De boer dat is de keerl". 
-        Wonder what makes these two songs' lyrics so different?
+        There is no clear distinction among eras regarding the lyrics.
+        We can see this as an indication that most of the English songs across eras have similar topic.
+        Even the spreads (areas of the ellipse) are more or less the same size.
+    """),
+    html.H6("As for the Dutch songs", className="text-muted"),
+    html.P("""
+        The distribution is more polarized, especially between songs before 1990 and the 90s.
+        How about the 2000s songs? If you navigate to ranking year after 2010, those more recent songs
+        tend to be in the middle, between the oldies and the 90s. Compared to English, the Dutch songs
+        included in the ranking have more variance in terms of the topic of the lyrics.
     """)
 ])
 

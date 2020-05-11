@@ -5,7 +5,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
-from utils import get_graph_template, get_song_card
+from utils import get_graph_template, get_song_card, get_toast_hint
 from copy import deepcopy
 
 from app import app
@@ -193,7 +193,7 @@ content = [
 
 title = "The Lyric Constellation"
 
-description = html.Div(id="lyric-description", children="Click a song to see details.")
+description = html.Div(id="lyric-description", children=get_toast_hint())
 
 
 # CALLBACKS
@@ -214,7 +214,7 @@ def display_figure(lang, genres, ranking_year, search_input, search_radio):
 @app.callback(Output("lyric-description", "children"), [Input("lyric-fig", "clickData")])
 def display_artist_info(click_data):
     if click_data is None or "text" not in click_data["points"][0]:
-        return [html.Div("Click a song to see details.")]
+        return get_toast_hint()
     curr_song_id = click_data["points"][0]["text"]
     curr_df_id = click_data["points"][0]["customdata"][4]
     similars = all_df.loc[curr_df_id]["similar"]

@@ -7,5 +7,5 @@ app = dash.Dash(
     meta_tags=[{'name': 'viewport', 'content': 'width=device-width'}],
 )
 
-app.title = 'Bloghemian Rhapsody'
+app.title = 'Different Eras of Music'
 app.config.suppress_callback_exceptions = True

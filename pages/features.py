@@ -8,7 +8,8 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
+from utils import (create_initial_era_df, create_era_df, get_max_each_feature,
+                   get_graph_template, get_song_card_feature, get_toast_hint)
 from app import app
 
 
@@ -124,7 +125,7 @@ content = [
     html.Div(id='app-1-display-value')
 ]
 
-description = html.Div(id='feature_text', children="Click a dot to see details.")
+description = html.Div(id='feature_text', children=get_toast_hint())
 
 #CALLBACKS
 
@@ -227,7 +228,7 @@ def update_figure_genre(selected_genre, selected_origin):
 )
 def display_feature_text(clickData):
     if clickData is None or "y" not in clickData["points"][0]:
-        return [html.Div("Click a dot to see details.")]
+        return get_toast_hint()
     
     click = clickData['points'][0]
     era = click['customdata'][0]

@@ -73,7 +73,7 @@ def display_page(pathname):
                get_nav_buttons("oi-media-step-backward", "/features/reff", "oi-media-step-forward", "/lyrics/intro")
     elif pathname == "/lyrics/intro":
         return lyrics_intro.title, lyrics_intro.content, lyrics_intro.description, \
-               get_nav_buttons("oi-media-step-backward", "/features", "oi-media-step-forward", "/lyrics/reff")
+               get_nav_buttons("oi-media-step-backward", "/features/outro", "oi-media-step-forward", "/lyrics/reff")
     elif pathname == "/lyrics/reff":
         return lyrics.title, lyrics.content, lyrics.description, \
                get_nav_buttons("oi-media-step-backward", "/lyrics/intro", "oi-media-step-forward", "/lyrics/outro")
