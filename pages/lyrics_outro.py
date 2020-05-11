@@ -157,18 +157,18 @@ description = html.Div(children=[
         We can group each era into a single data point each, represented by a star of different colors.
         The most crowded area for each era is inside each ellipse with the same color.
     """),
-    html.H6("Look at the stars for the English songs", className="text-muted"),
+    html.H6("Looking at the stars for the English songs", className="text-muted"),
     html.P("""
-        There is no clear distinction among eras regarding the lyrics.
+        There is no clear distinction among eras regarding the lyrics. 
+        If else, the distance has gone closer every year.
         We can see this as an indication that most of the English songs across eras have similar topic.
-        Even the spreads (areas of the ellipse) are more or less the same size.
     """),
     html.H6("As for the Dutch songs", className="text-muted"),
     html.P("""
         The distribution is more polarized, especially between songs before 1990 and the 90s.
         How about the 2000s songs? If you navigate to ranking year after 2010, those more recent songs
         tend to be in the middle, between the oldies and the 90s. Compared to English, the Dutch songs
-        included in the ranking have more variance in terms of the topic of the lyrics.
+        lyrics are more diverse among the eras.
     """)
 ])
 
