@@ -22,7 +22,7 @@ description = html.Div([
     html.Br(),
     dcc.Link('Genres', href='/genres/intro'),
     html.Br(),
-    dcc.Link('Song Features', href='/features'),
+    dcc.Link('Song Features', href='/features/intro'),
     html.Br(),
     dcc.Link('Lyrics', href='/lyrics/intro'),
     html.Br(),
