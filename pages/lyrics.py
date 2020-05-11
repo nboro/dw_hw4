@@ -79,7 +79,7 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
         "2000s": "2000-2019"
     }
     for m in [False, True]:
-        for i, state in enumerate(["oldies", "90s", "2000s"]):
+        for state in ["oldies", "90s", "2000s"]:
             trace_df = lyric_df[(lyric_df["era"] == state) & mask] if m else lyric_df[(lyric_df["era"] == state) & ~mask]
             custom_data = [
                 (r["title"], r["artists"], r["bill_rank"], r["bill_year"], idx) for idx, r in trace_df.iterrows()
