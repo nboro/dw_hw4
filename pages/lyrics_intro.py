@@ -141,7 +141,7 @@ content = [
 title = "The Lyric Constellation"
 
 description = html.Div(children=[
-    html.H5("Are we singing about the same stuff?", className="text-info"),
+    html.H5("Are we listening the same stuff?", className="text-info"),
     html.P([
         """
         This chart represents songs' similarity based on their lyrics.
