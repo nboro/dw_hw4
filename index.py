@@ -61,16 +61,16 @@ def display_page(pathname):
                get_nav_buttons("oi-media-step-backward", "/scatter/outro", "oi-media-step-forward", "/genres/reff")
     elif pathname == "/genres/reff":
         return genre_analysis.title, genre_analysis.content, genre_analysis.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres/intro", "oi-media-step-forward", "/features")
+               get_nav_buttons("oi-media-step-backward", "/genres/intro", "oi-media-step-forward", "/features/intro")
     elif pathname == "/features/intro":
         return features_intro.title, features_intro.content, features_intro.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
+               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/features/reff")
     elif pathname == "/features/reff":
         return features.title, features.content, features.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
+               get_nav_buttons("oi-media-step-backward", "/features/intro", "oi-media-step-forward", "/features/outro")
     elif pathname == "/features/outro":
         return features_outro.title, features_outro.content, features_outro.description, \
-               get_nav_buttons("oi-media-step-backward", "/genres/reff", "oi-media-step-forward", "/lyrics/intro")
+               get_nav_buttons("oi-media-step-backward", "/features/reff", "oi-media-step-forward", "/lyrics/intro")
     elif pathname == "/lyrics/intro":
         return lyrics_intro.title, lyrics_intro.content, lyrics_intro.description, \
                get_nav_buttons("oi-media-step-backward", "/features", "oi-media-step-forward", "/lyrics/reff")
