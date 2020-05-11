@@ -56,6 +56,28 @@ layout_settings["annotations"] = [
 
 title = "Release year of top-200 songs"
 
+description = html.Div(children=[
+    html.H5("Comparing the release year and the ranking year of songs", className="text-info"),
+    html.P("""
+        You can see at the plot on your left the yellow dots representing the "Jimmy" by "Boudejiwn de Groot". More specifiaclly, "Jimmy" was at the top-200 chart from 1999 until 2005 and at 2008. The yellow represent the genre of the song, which in this case is "rock"
+    """),
+    html.P("""
+        The blue dots refer to "Fix You" by "Coldplay". The color of dots is blue because "Fix You" is categorized as pop. Moreover the song entered the chart in 2011, where it is until today.
+    """),
+    html.P("""
+        If you 'hover' the mouse over the dot, you can see more info of the song.
+    """),
+    # html.P("""
+    #     For instance, Bohemian Rhapsody is more similar to Imagine than Child in Time.
+    #     Child in Time is far from the center,
+    #     which indicates low degree of similarity with the rest of the songs in 1999.
+    # """,className="text-justify"),
+    html.H5("Explore on your own!", className="text-info"),
+    html.P("""
+         Do you want to learn more about the songs? Press the next button and start exploring! You can filter from the top-10 to top-200 songs. You can filter to see only Dutch songs or only International songs. Last but not least, you can filter the genders!
+    """)
+])
+
 content = [
     dbc.Row([
         dbc.Col([
@@ -97,4 +119,20 @@ content = [
     ])
 ]
 
-description = html.Div([html.P("Lorem Ipsum")])
+# description = html.Div([html.H5("Lorem Ipsum")])
+
+# html.H5("Popular songs by Genre", className="text-info"),
+#     html.P([
+#         """
+#         This chart visualizes the billboard ranking journey of the most popular songs in 2020 segregated by the top three genres.
+#         Within each chart the songs have been color coordinated by the era in which the songs were released. Each line in the chart
+#         is a song that made it into the billboard charts between 1999 to 2019 and their respective ranking each year.
+#         """
+#     ]),
+#     html.H6("The color of the lines.", className="text-info"),
+#     html.P([
+#         """
+#         The songs have been categorised into three eras (oldies, 2000’s & 90’s) based on the year that it was released,
+#         which could give us more insight into why a song is more or less popular within a genre.
+#         """
+#     ]),
