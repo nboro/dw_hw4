@@ -96,9 +96,6 @@ def update_figure(selected_isDutch, bill_rank_lista):
             (r["title"], r["artist"], r["bill_rank"], r["bill_year"], r["song_id"]) for idx, r in df.iterrows()
         ]
 
-        # ranking_year = str(df.iloc[0]["Ranking Year"])
-        # bill_rank = df[0]['bill_rank']
-
         traces.append(dict(
             type="scattergl",
             x=df["Ranking Year"],
@@ -119,33 +116,13 @@ def update_figure(selected_isDutch, bill_rank_lista):
     return {
         'data': traces,
         'layout': graph_settings["layout"]
-        # 'layout': dict(
-        #     xaxis={'title': 'Ranking Year',
-        #            'range':[1998, 2020]},
-        #     yaxis={'title': 'Song Release Year', 'range': [1955, 2020]},
-        #     margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
-        #     legend={'x': 0, 'y': 1},
-        #     hovermode='closest',
-        # )
+
     }
 
 
 @app.callback(Output("scatter-description", "children"), [Input("graph-with-slider", "clickData")])
 def display_artist(clickData):
-    #if clickData:
-    #
-    # titlos = click['customdata'][0]
-    # rankyear = round(click['x'])
-    # billrank = click['customdata'][1]
-    #
-    # row1 = html.Tr([html.Td(dcc.Markdown('''**Title is**''')), html.Td(titlos)])
-    # row2 = html.Tr([html.Td(dcc.Markdown('''**Rank Year**''')), html.Td(rankyear)])
-    # row3 = html.Tr([html.Td(dcc.Markdown('''**Bill Rank**''')), html.Td(billrank)])
-    # table_body = [html.Tbody([row1,row2,row3])]
-    # table = dbc.Table(table_body
-    # return html.Div(children=[
-    #     table
-    # ], className="table-responsive")
+
     if clickData is None or "customdata" not in clickData["points"][0]:
         return get_toast_hint()
 
