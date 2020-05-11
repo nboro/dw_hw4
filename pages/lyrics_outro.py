@@ -168,7 +168,7 @@ description = html.Div(children=[
         The distribution is more polarized, especially between songs before 1990 and the 90s.
         How about the 2000s songs? If you navigate to ranking year after 2010, those more recent songs
         tend to be in the middle, between the oldies and the 90s. Compared to English, the Dutch songs
-        included in the ranking have more variance in terms of the topic of the lyrics.
+        lyrics are more diverse among the eras.
     """)
 ])
 
