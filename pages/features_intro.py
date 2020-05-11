@@ -8,7 +8,7 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
+from utils import create_initial_era_df,create_era_df,get_graph_template
 from app import app
 
 graph_settings = get_graph_template()

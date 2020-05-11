@@ -8,12 +8,67 @@ import pickle
 
 from dash.dependencies import Output, Input
 
-from utils import create_initial_era_df,create_era_df,get_max_each_feature,get_graph_template,get_song_card_feature
+from utils import create_initial_era_df,create_era_df,get_graph_template
 from app import app
 
+graph_settings = get_graph_template()
+graph_settings["layout"]["xaxis"]["showgrid"] = False
+graph_settings["layout"]["xaxis"]["dtick"] = 25
+graph_settings["layout"]["xaxis"]["ticksuffix"] = "%"
+graph_settings["layout"]["xaxis"]["fixedrange"] = True
+graph_settings["layout"]["xaxis"]["range"] = [-105, 100]
+graph_settings["layout"]["yaxis"]["title"] = "Song Features"
+graph_settings["layout"]["yaxis"]["fixedrange"] = True
+graph_settings["layout"]["margin"]["pad"] = 20
+graph_settings["layout"]["yaxis"]["zeroline"] = False
+# graph_settings["layout"]["clickmode"] = 'event'
+graph_settings["layout"]["legend"] = {
+    "font_size": 10,
+    "yanchor": "middle",
+    "xanchor": "right"
+}
+
+bill_join_df = pd.read_csv("data/bill_join_df.csv", index_col=0)
+bill_join_df.is_dutch = bill_join_df.is_dutch.map({True:'Dutch', False:'International'})
+origin_list = bill_join_df.is_dutch.unique().tolist()
+origin_list.append('All')
+
+color_sequence = ["#f0ad4e", "#5bc0de", "#d9534f"]
 
 content = [
-
+    dbc.Row([
+        dbc.Col([
+            dbc.FormGroup([
+                dbc.Label("Country:"),
+                dbc.Select(
+                    id='dutch',
+                    options=[{'label': key, 'value': key} for key in origin_list],
+                    value='All',
+                    disabled=True
+                )
+            ])
+        ], width=4),
+        dbc.Col([
+            dbc.FormGroup([
+                dbc.Label("Genre:"),
+                dbc.Select(
+                    id="genres",
+                    options=[{'label': 'rock', 'value': 'rock'}],  # TODO fix this with correct initial value list
+                    value='All',
+                    disabled=True
+                )
+            ])
+        ], width=4)
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(
+                id='song-feature-outro',
+                figure={"data": [], "layout": graph_settings["layout"]},
+                config=graph_settings["config"]
+            ),
+        ])
+    ]),
 ]
 
 title = "Comparing Features of Different Song Eras (based on Spotify API)"
@@ -34,3 +89,46 @@ description = html.Div(children=[
     # """,className="text-justify)
 ])
 
+@app.callback(
+    Output('song-feature-outro', 'figure'),
+    [
+        Input('genres', 'value'),
+        Input('dutch', 'value')
+    ])
+def update_figure_genre(selected_genre, selected_origin):  
+
+    create_initial_era_df(bill_join_df)
+    best_era_df = create_era_df(bill_join_df)
+
+    f = ['Valence','Speechiness','Energy','Danceability','Tempo']
+    best_era_df = best_era_df[best_era_df['Song Features'].isin(f)]
+
+    best_era_df = best_era_df.reset_index(drop=True)
+    best_era_df['Compared to Oldies (Song Released < 1990)'] = round(best_era_df['Compared to Oldies (Song Released < 1990)'],1)
+
+    traces = []
+    
+    for i in best_era_df['Song Era'].unique():
+        df = best_era_df[best_era_df['Song Era'] == i]        
+        diff2 = 'markers+text'        
+        traces.append(dict(
+            x=df['Compared to Oldies (Song Released < 1990)'],
+            y=df['Song Features'],
+            # text= diff,
+            mode=diff2,
+            hoverinfo='skip',
+            # textposition = text_posistion,
+            opacity=0.7,
+            marker=dict(
+                # line=dict(width=0.5, color='#2B3E50'),
+                symbol='circle',
+                size=16,
+                color= color_sequence[np.where(best_era_df['Song Era'].unique() == i)[0][0]]
+            ),
+            name=i
+        ))
+
+    return {
+        'data': traces,
+        'layout': graph_settings["layout"]
+    }
