@@ -77,11 +77,11 @@ description = html.Div(children=[
     html.H5("Do you recognize any trend..?", className="text-info"),
     dcc.Markdown('''***Valence*** appears to be significantly higher in the oldest era in almost all cases. This means older songs are more positive and probably that is why people prefer them.''',className="text-justify"),
     dcc.Markdown("""
-        ***Speechiness*** follows the same pattern as valence. This means that probably lyrics in older songs are more positive. To support this we can observe that the instrumentalness is significantly lower in the more recent eras suggesting that although recent era songs contain more vocals probably they are less positive or people prefer short and simple.
-    """,className="text-justify"),
+        ***Speechiness*** follows the same pattern as valence. This means that probably lyrics in older songs are more positive. To support this we can observe that the ***Instrumentalness*** is significantly lower in the more recent eras suggesting that although recent era songs contain more vocals probably they are less positive or people prefer short, simple and more instrumental songs.
+    """),
     dcc.Markdown("""
         ***Energy***, ***Danceability*** and ***Tempo*** do not appear to have considerable differences suggesting that songs probably have not changed that much throughout the years and the reason for people’s preferences probably does not lie there. 
-    """,className="text-justify"),
+    """),
     # html.H5("Try it yourself!", className="text-info"),
     # html.P("""
     #     What happened over the ranking years? Are there more outlier songs or mainstream ones? 
@@ -100,7 +100,7 @@ def update_figure_genre(selected_genre, selected_origin):
     create_initial_era_df(bill_join_df)
     best_era_df = create_era_df(bill_join_df)
 
-    f = ['Valence','Speechiness','Energy','Danceability','Tempo']
+    f = ['Valence','Speechiness','Instrumentalness','Energy','Danceability','Tempo']
     best_era_df = best_era_df[best_era_df['Song Features'].isin(f)]
 
     best_era_df = best_era_df.reset_index(drop=True)

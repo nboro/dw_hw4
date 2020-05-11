@@ -76,10 +76,10 @@ description = html.Div(children=[
     html.H5("Identifying song characteristics among eras", className="text-info"),
     html.P("""
         In order to validate our hypothesis about the preference for older songs we additionally leveraged information from spotify. More specifically, for each song in our dataset we retrieved quantitative measures for 9 song features from spotify API. 
-    """,className="text-justify"),
+    """),
     html.P("""
         In order  to utilize these features more effectively we split the dataset into 3 eras and then computed the mean value for each feature for every era. To better communicate our findings we calculated the difference between the oldest era and the two other eras.
-    """,className="text-justify"),
+    """),
     # html.P("""
     #     For instance, Bohemian Rhapsody is more similar to Imagine than Child in Time. 
     #     Child in Time is far from the center, 
@@ -88,7 +88,7 @@ description = html.Div(children=[
     html.H5("Try it yourself!", className="text-info"),
     html.P("""
         Does the song feature information provide eventually insights regarding our hypothesis…? Do these insights align for dutch songs and international songs…? Can we combine information from two or more features…?
-    """,className="text-justify")
+    """)
 ])
 
 @app.callback(
