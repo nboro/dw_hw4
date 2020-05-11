@@ -28,7 +28,7 @@ description = html.Div(children=[
     html.H5("Popular songs by Genre", className="text-info"),
     html.P([
         """
-        This chart visualizes the billboard ranking journey of the most popular songs in 2020 segregated by the top three genres.
+        This chart visualizes the billboard ranking journey of the most popular songs of Spotify in 2020 segregated by the top three genres.
         Within each chart the songs have been color coordinated by the era in which the songs were released. Each line in the chart
         is a song that made it into the billboard charts between 1999 to 2019 and their respective ranking each year.
         """
