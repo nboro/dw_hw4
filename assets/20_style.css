@@ -96,3 +96,7 @@
 .close:hover {
     color: #abb6c2;
 }
+
+g.pointtext {
+    display: none;
+}

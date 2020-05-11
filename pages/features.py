@@ -115,7 +115,6 @@ content = [
             ),
         ])
     ]),
-    html.Div(id='app-1-display-value')
 ]
 
 description = html.Div(id='feature_text', children=get_toast_hint())
