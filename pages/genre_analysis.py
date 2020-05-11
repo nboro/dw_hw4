@@ -24,7 +24,25 @@ fig = make_subplots(rows=1, cols=3, shared_yaxes=True, subplot_titles=('Rock', '
 
 title = "Most Popular Songs in each Genre"
 
-description = "Lorem Ipsum"
+description = html.Div(children=[
+    html.H5("Does era influence popularity ?", className="text-info"),
+    html.P([
+        """
+        As we can see songs released in the 2000’s don't make it to the top 100 in Rock but do in both Pop and Soul. 
+        The top of the chart in Pop is often dominated by songs released in the 2000's. 
+        For Soul the songs that were released in the 90’s never made it even into the top 1000 in the billboard over the last 20 years.    
+        """,
+
+    ]),
+    html.P([
+        """
+        These graphs help discover how the era in which the songs were released causes a unique billboard journey within 
+        a genre but varies significantly among each genre. Every genre has its dominating and inferior era's that keeps songs 
+        ranked within its distinct ranges.      
+        """
+
+    ]),
+])
 
 def grouped_df(value):
     specific = sample_set.loc[sample_set['genre'] == value]
