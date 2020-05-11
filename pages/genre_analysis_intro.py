@@ -77,7 +77,8 @@ graph_settings["layout"]["legend"] = {
     "x": 0,
     "y": -0.1,
     "xanchor": "left",
-    "yanchor": "top"
+    "yanchor": "top",
+    "orientation": "h"
 }
 fig.update_layout(graph_settings["layout"])
 fig.update_xaxes(
