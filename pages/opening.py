@@ -7,7 +7,9 @@ title = "We are here for a ride, darling."
 
 content = html.Img(
     src=app.get_asset_url('imgs/freddie.png'),
-    className="img-fluid mx-auto d-block"
+    className="img-fluid mx-auto d-block",
+    alt="https://fineartamerica.com/featured/2-freddie-mercury-melanie-d.html?product=kids-tshirt",
+    title="Freddie Mercury"
 )
 
 description = html.Div([

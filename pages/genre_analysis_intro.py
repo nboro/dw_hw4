@@ -33,7 +33,7 @@ description = html.Div(children=[
         is a song that made it into the billboard charts between 1999 to 2019 and their respective ranking each year.
         """
     ]),
-    html.H6("The color of the lines.", className="text-info"),
+    html.H5("The color of the lines", className="text-info"),
     html.P([
         """
         The songs have been categorised into three eras (oldies, 2000’s & 90’s) based on the year that it was released, 
@@ -77,8 +77,7 @@ graph_settings["layout"]["legend"] = {
     "x": 0,
     "y": -0.1,
     "xanchor": "left",
-    "yanchor": "top",
-    "orientation": "h"
+    "yanchor": "top"
 }
 fig.update_layout(graph_settings["layout"])
 fig.update_xaxes(
