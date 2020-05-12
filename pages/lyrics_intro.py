@@ -117,7 +117,7 @@ content = [
     dbc.Row([
         dbc.Col(
             get_figure(),
-            id="lyric-fig-col",
+            id="lyric-fig-in",
             width=12
         )
     ]),
