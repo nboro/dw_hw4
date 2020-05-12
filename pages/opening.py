@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from app import app
 
-title = "Long live The Queen."
+title = "Long Live The Queen."
 
 content = html.Img(
     src=app.get_asset_url('imgs/freddie.png'),
