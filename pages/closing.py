@@ -82,7 +82,7 @@ description = html.Div([
     html.P([
         "Visuals developed with ",
         dcc.Link("Dash", href="https://plotly.com/dash/"),
-        " and hosted in ",
+        " and hosted on ",
         dcc.Link("Heroku", href="https://www.heroku.com/"),
         ". Website template is based on ",
         dcc.Link("Bootswatch", href="https://bootswatch.com/"),
