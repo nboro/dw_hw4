@@ -152,7 +152,7 @@ content = [
 title = "The Lyric Constellation"
 
 description = html.Div(children=[
-    html.H5("Do you recognize any trend?", className="text-info"),
+    html.H5("A Collective Assessment", className="text-info"),
     html.P("""
         We can group each era into a single data point each, represented by a star of different colors.
         The most crowded area for each era is inside each ellipse with the same color.
