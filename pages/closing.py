@@ -3,29 +3,22 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from app import app
 
-title = "What's next?"
+title = "Let's recap"
 
 content = dbc.Row(children=[
     html.Div(children=[
-        html.H4("Story recap", className="text-info"),
+        html.H4("Why people prefer listening to old music...?", className="text-info"),
         dcc.Markdown("""
-            The journey for our story began when we noticed a very interesting fact in the Top 2000 chart. *Bohemian Rhapsody* a song performed by *Queen*, a band not active for almost 30 years, has been on the top of the chart consecutively until today. The aforementioned fact got us wondering, thus we formulated the following main question and subquestion:
+        Our analysis indeed demonstrates that people prefer listening to songs from older eras. The first two visualizations contain information about the song rankings throughout the years. The derived insights confirm that the top ranked songs until today are from the oldest era i.e. songs released from 1920 to 1989. In addition, the genre that dominates in the top seeds is *Rock*. We observe an emerging *Pop* genre in the top seeds especially in the last decade for the international stage but the Dutch preferences persist the old good *Rock*.   
         """),
         dcc.Markdown("""
-            > #### *Why people prefer listening to old music...?*
-            > - What drives them to listen to songs from old eras...?
-        """),
-        dcc.Markdown("""
-        In order to adrress these questions, we looked for answers by analysing, combining and aggregating information from the Dutch Top 2000 dataset and the Spotify API. We developed the present story in which we exhibit 4 interactive visualizations. Through these visualizations we attempted to provide a spherical representation of our findings. In the following section a summary of our main findings is presented.   
+        In the last two visualizations we made an effort to address the causality behind these preferences. In the third visualiation, analyzing the song features we discovered that older era songs are substanitally more *instrumental*, more *positive* and contain more *vocals*. This last finding is aligned with our discoveries in the last visualization where we conclude that the lyrics from the old era are more diverse and that songs from the last decade attempt to have lyrics similar to the old era. This indicates, that probably the music industry is aware of the success of the older songs and attempts to releease new songs which might have similar characteristics and lyrics of the old era.   
         """),
     ]),
     html.Div(children=[
         html.H4("Final remarks", className="text-info"),
         dcc.Markdown("""
-            Our analysis indeed demonstrates that people prefer listening to songs from older eras. The first two visualizations contain information about the song rankings throughout the years. The derived insights confirm that the top ranked songs until today are from the oldest era i.e. songs released from 1920 to 1989. In addition, the genre that dominates in the top seeds is *Rock*. We observe an emerging *Pop* genre in the top seeds especially in the last decade for the international stage but the Dutch preferences persist the old good *Rock*.  
-        """),
-        dcc.Markdown("""
-            In the last two visualizations we made an effort to address the causality behind these preferences. In the third visualiation, analyzing the song features we discovered that older era songs are substanitally more *instrumental*, more *positive* and contain more *vocals*. This last finding is aligned with our discoveries in the last visualization where we conclude that the lyrics from the old era are more diverse and that songs from the last decade attempt to have lyrics similar to the old era. This indicates, that probably the music industry is aware of the success of the older songs and attempts to releease new songs which might have similar characteristics and lyrics of the old era.
+              Let's not forget that the presented analysis does not probably represent the whole Dutch population but merely the NPO Radio listener. Also, being nostalgic can be a good reason why people listen to old songs but we dont have the required data to analyze that. One final comment, human nature enjoys comparing and ranking its surroundings but when it comes to music everyone has their own taste. 
         """),
     ]),
     
