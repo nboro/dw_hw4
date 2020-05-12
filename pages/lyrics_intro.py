@@ -155,10 +155,10 @@ description = html.Div(children=[
         In essence, each dot is a song and the closer they are in the graph, 
         the more similar the lyric are.
     """),
-    html.P(
+    dcc.Markdown(
         """
-        For instance, Bohemian Rhapsody is more similar to Imagine than Child in Time. 
-        Child in Time is far from the center, 
+        For instance, **Bohemian Rhapsody** is more similar to **Imagine** than **Child in Time**. 
+        **Child in Time** is far from the center, 
         which indicates low degree of similarity with the rest of the songs in 1999 ranking year.
         """
     ),
