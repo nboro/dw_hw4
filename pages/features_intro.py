@@ -78,7 +78,7 @@ description = html.Div(children=[
         For each song in our dataset we retrieved quantitative measures for 9 song features from Spotify API. 
     """),
     html.P("""
-        We split the dataset into 3 eras and then computed the mean value for each feature for every era. The value represents the relative difference to the oldest era (1920-1989)".
+        We split the dataset into 3 eras and then computed the mean value for each feature for every era. The value represents the relative difference to the oldest era (1920-1989).
     """),
     dcc.Markdown("""
         As an example, on the left side we can see that the **Instrumentalness** of the 90s is 61.8% lower and the 2000s is 74.0% lower than the oldies. So, the old songs tend to be more instrumental than the more recent songs.
