@@ -24,7 +24,7 @@ def get_figure(lang, bill_year):
     lyric_df = all_df[(all_df["bill_year"] == bill_year) & all_df.index.str.contains(lang)].copy()
     lyric_agg_df = lyric_df.groupby("era")["pca1", "pca2"].agg(["mean", "std"])
     layout_settings["yaxis"]["range"] = [-0.35, 0.65] if lang == "en" else [-0.15, 0.2]
-    layout_settings["xaxis"]["range"] = [-0.5, 0.7] if lang == "en" else [-0.2, 0.2]
+    layout_settings["xaxis"]["range"] = [-0.5, 0.7] if lang == "en" else [-0.2, 0.25]
     layout_settings["legend"]["title"]["text"] = "Average Era Position"
     traces = []
     shapes = []

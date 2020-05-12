@@ -59,7 +59,7 @@ title = "Release year of top-200 songs"
 description = html.Div(children=[
     html.H5("Comparing the release year and the ranking year of songs", className="text-info"),
     html.P("""
-        You can see at the plot on your left the yellow dots representing the "Jimmy" by "Boudejiwn de Groot". More specifiaclly, "Jimmy" was at the top-200 chart from 1999 until 2005 and at 2008. The yellow represent the genre of the song, which in this case is "rock"
+        You can see at the plot on your left the yellow dots representing the "Jimmy" by "Boudejiwn de Groot". More specifically, "Jimmy" was at the top-200 chart from 1999 until 2005 and at 2008. The yellow represent the genre of the song, which in this case is "rock"
     """),
     html.P("""
         The blue dots refer to "Fix You" by "Coldplay". The color of dots is blue because "Fix You" is categorized as pop. Moreover the song entered the chart in 2011, where it is until today.
@@ -74,7 +74,7 @@ description = html.Div(children=[
     # """,className="text-justify"),
     html.H5("Explore on your own!", className="text-info"),
     html.P("""
-         Do you want to learn more about the songs? Press the next button and start exploring! You can filter from the top-10 to top-200 songs. You can filter to see only Dutch songs or only International songs. Last but not least, you can filter the genders!
+         Do you want to learn more about the songs? Press the next button and start exploring! You can filter from the top-10 to top-200 songs. You can filter to see only Dutch songs or only International songs. Last but not least, you can filter the genres!
     """)
 ])
 

@@ -53,15 +53,41 @@ content = dbc.Row(children=[
 
 description = html.Div([
     html.H5("Data & Methodology", className="text-info"),
-    html.P("""
-    We scraped wikipedia, process by, bla bla bla.
-    """),
-    html.P("""
-    Graph created with Plotly, bla bla bla
-    """),
-    html.P("""
-    Images taken from...
-    """),
+    html.P([
+        "The ranking data is based on ",
+        dcc.Link("NPO Radio 2 Top 2000", href="https://www.nporadio2.nl/top2000"),
+        " and retrieved via the corresponding ",
+        dcc.Link("Wikipedia page",
+                 href="https://nl.wikipedia.org/wiki/Lijst_van_Radio_2-Top_2000%27s"),
+        ". Song features are gathered with ",
+        dcc.Link("Spotify API",
+                 href="https://developer.spotify.com/documentation/web-api/quick-start/"),
+        " using the ",
+        dcc.Link("spotipy", href="https://github.com/plamere/spotipy"),
+        " library."
+    ]),
+    html.P([
+        "Lyrics are collected from ",
+        dcc.Link("lyrics.wikia.com", href="http://lyrics.wikia.com/"),
+        " using the ",
+        dcc.Link("lyricwikia", href="https://pypi.org/project/lyricwikia/"),
+        " library and ",
+        dcc.Link("musixmatch", href="https://www.musixmatch.com/"),
+        ". We use pre-train embeddings from ",
+        dcc.Link("Google", href="https://code.google.com/archive/p/word2vec/"),
+        " for the English songs and ",
+        dcc.Link("dutchembeddings", href="https://github.com/clips/dutchembeddings"),
+        " for Dutch."
+    ]),
+    html.P([
+        "Visuals developed with ",
+        dcc.Link("Dash", href="https://plotly.com/dash/"),
+        " and hosted in ",
+        dcc.Link("Heroku", href="https://www.heroku.com/"),
+        ". Website template is based on ",
+        dcc.Link("Bootswatch", href="https://bootswatch.com/"),
+        "."
+    ]),
     html.H5("Composed by", className="text-info"),
     html.Ul([
         html.Li(dcc.Link("Chris Papas", href="https://www.linkedin.com/in/christos-papas-a2ba76172/")),

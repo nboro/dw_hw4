@@ -28,12 +28,12 @@ description = html.Div(children=[
     html.H5("Popular songs by Genre", className="text-info"),
     html.P([
         """
-        This chart visualizes the billboard ranking journey of the most popular songs in 2020 segregated by the top three genres.
+        This chart visualizes the billboard ranking journey of the most popular songs of Spotify in 2020 segregated by the top three genres.
         Within each chart the songs have been color coordinated by the era in which the songs were released. Each line in the chart
         is a song that made it into the billboard charts between 1999 to 2019 and their respective ranking each year.
         """
     ]),
-    html.H6("The color of the lines.", className="text-info"),
+    html.H5("The color of the lines", className="text-info"),
     html.P([
         """
         The songs have been categorised into three eras (oldies, 2000’s & 90’s) based on the year that it was released, 

@@ -53,7 +53,7 @@ def get_figure(lang, genre, bill_year, search_text, search_type):
             lyric_df["title"].str.contains(search_text, case=False)
 
     layout_settings["yaxis"]["range"] = [-0.35, 0.65] if lang == "en" else [-0.15, 0.2]
-    layout_settings["xaxis"]["range"] = [-0.5, 0.7] if lang == "en" else [-0.2, 0.2]
+    layout_settings["xaxis"]["range"] = [-0.5, 0.7] if lang == "en" else [-0.2, 0.25]
 
     if len(lyric_df) == 0:
         layout_settings["annotations"] = [{
