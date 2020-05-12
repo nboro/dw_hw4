@@ -19,7 +19,7 @@ year_chart_df['main_genre'] = year_chart_df['main_genre'].apply(lambda g: g if g
 genre_list = year_chart_df["main_genre"].unique().tolist()
 genre_list.append("All")
 
-year_chart_df['Artist Country'] = year_chart_df['Artist Country'].map({True: 'Dutch', False: 'Non Dutch'})
+year_chart_df['Artist Country'] = year_chart_df['Artist Country'].map({True: 'Dutch', False: 'International'})
 isDutch_list = year_chart_df['Artist Country'].unique().tolist()
 isDutch_list.append("All")
 
