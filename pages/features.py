@@ -81,7 +81,7 @@ def get_key(text):
 
 
 # CONTENTS
-title = "Comparing Features of Different Song Eras (based on Spotify API)"
+title = "Comparing Song Features of Different Eras"
 
 content = [
     dbc.Row([

@@ -83,15 +83,15 @@ content = [
 
 description = html.Div(children=[
     html.H5("Let's discover some insights!", className="text-info"),
-    html.P("""
-        Wow! Lot of yellow dots! It is clear that rock music is dominating, especially the old songs. So, we notice that Dutch people prefer "rock" over other genres. 
+    dcc.Markdown("""
+        Wow! Lot of yellow dots! It is clear that rock music is dominating, especially the old songs. So, we notice that the **Dutch** prefer **rock** over other genres. 
     """),
-    html.P("""
-        However, it is noticeable at the top right corner lot of blue dots. If we properly filter, we notice that after 2010, the amount of songs that entered the charts were more "pop" than "rock".
+    dcc.Markdown("""
+        However, it is noticeable at the top right corner lot of blue dots. If we properly filter, we notice that after 2010, the amount of songs that entered the charts were more **pop** than rock".
     """),
-    html.P("""
-        Is everything that is mentioned above true for both "Dutch" and "International" music? Well, for international music we can see the same patterns. Especially for "pop", after 2010 is almost the dominant genre.
-        On the other hand, "Dutch" songs does not seem to follow this pattern. We notice that dutch songs that joined the charts the last few years are still "rock". 
+    dcc.Markdown("""
+        Is everything that is mentioned above true for both **Dutch** and **International** music? Well, for international music we can see the same patterns. Especially for **pop**, after 2010 is almost the dominant genre.
+        On the other hand, **Dutch** songs does not seem to follow this pattern. We notice that dutch songs that joined the charts the last few years are still **rock**. 
     """),
 
 ])

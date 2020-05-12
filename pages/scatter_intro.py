@@ -58,14 +58,11 @@ title = "Release year of top-200 songs"
 
 description = html.Div(children=[
     html.H5("Comparing the release year and the ranking year of songs", className="text-info"),
-    html.P("""
-        You can see at the plot on your left the yellow dots representing the "Jimmy" by "Boudejiwn de Groot". More specifically, "Jimmy" was at the top-200 chart from 1999 until 2005 and at 2008. The yellow represent the genre of the song, which in this case is "rock"
+    dcc.Markdown("""
+        You can see at the plot on your left the yellow dots representing the **Jimmy** by **Boudejiwn de Groot**. More specifically, **Jimmy** had been at the top-200 chart from 1999 until 2005 and 2008. The yellow color represents the genre of the song, which in this case is rock
     """),
-    html.P("""
-        The blue dots refer to "Fix You" by "Coldplay". The color of dots is blue because "Fix You" is categorized as pop. Moreover the song entered the chart in 2011, where it is until today.
-    """),
-    html.P("""
-        If you 'hover' the mouse over the dot, you can see more info of the song.
+    dcc.Markdown("""
+        The blue dots refer to **Fix You** by **Coldplay**. The color of dots is blue because **Fix You** is categorized as pop. Moreover, the song entered the chart in 2011, where it stays until today. If you *hover* on the dot, you can see more info of the song.
     """),
     # html.P("""
     #     For instance, Bohemian Rhapsody is more similar to Imagine than Child in Time.
@@ -73,9 +70,11 @@ description = html.Div(children=[
     #     which indicates low degree of similarity with the rest of the songs in 1999.
     # """,className="text-justify"),
     html.H5("Explore on your own!", className="text-info"),
-    html.P("""
-         Do you want to learn more about the songs? Press the next button and start exploring! You can filter from the top-10 to top-200 songs. You can filter to see only Dutch songs or only International songs. Last but not least, you can filter the genres!
-    """)
+    dcc.Markdown(["""
+        Do you want to learn more about the songs? Press the next button
+        above and start exploring! You can filter from the top-10 to top-200 songs. You can filter to see only Dutch songs or only International songs. Last but not least, you can filter the genres!
+    """
+    ]),
 ])
 
 content = [

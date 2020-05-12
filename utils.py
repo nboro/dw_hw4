@@ -59,7 +59,7 @@ def get_graph_template():
     }
 
 
-def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
+def get_nav_buttons(prev_icon, prev_url, next_icon, next_url, page_no):
     buttons = []
     if prev_icon:
         buttons.append(
@@ -76,6 +76,10 @@ def get_nav_buttons(prev_icon, prev_url, next_icon, next_url):
                 id="prev-page",
                 href=prev_url
             )
+        )
+    if page_no:
+        buttons.append(
+            html.Div(f"{page_no}/11", style={"padding-left": "4px", "padding-right": "4px", "padding-top": "2px"})
         )
     if next_icon:
         buttons.append(
