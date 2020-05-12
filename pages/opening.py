@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from app import app
 
-title = "We are here for a ride, darling."
+title = "Long live The Queen."
 
 content = html.Img(
     src=app.get_asset_url('imgs/freddie.png'),
@@ -13,14 +13,14 @@ content = html.Img(
 )
 
 description = html.Div([
-    html.H5("Why..?", className="text-info"),
-    html.P("""
-    ...is a 40+ years old song still topping the billboard charts today? Yes. We are referring to Bohemian Rhapsody by 
-    the famous British Rock band Queen. 
+    html.H5("Why is a 40+ years old song still topping the billboard charts today?", className="text-info"),
+    dcc.Markdown("""
+    Yes. We are referring to **Bohemian Rhapsody** by 
+    the famous British Rock band **Queen**. 
     """),
-    html.P("""
-    According to the Billboard ranking’s in the Netherlands Bohemian Rhapsody along with a 
-    few other tracks such Hotel California and Imagine stands in the top three rankings of the billboard from 1999 to 2019. 
+    dcc.Markdown("""
+    According to the NPO radio ranking’s in the Netherlands **Bohemian Rhapsody** along with a 
+    few other tracks such **Hotel California** and **Imagine** stands in the top three rankings of the billboard from 1999 to 2019. 
     Interestingly, these are all Rock songs released before 1990. Does this mean that old music is better, or is new music 
     not as great? Looks like we will have to dig deep to find answers to this phenomenon.
     """),

@@ -26,11 +26,11 @@ title = "Most Popular Songs in each Genre"
 
 description = html.Div(children=[
     html.H5("Does era influence popularity ?", className="text-info"),
-    html.P([
+    dcc.Markdown([
         """
-        As we can see songs released in the 2000’s don't make it to the top 100 in Rock but do in both Pop and Soul. 
-        The top of the chart in Pop is often dominated by songs released in the 2000's. 
-        For Soul the songs that were released in the 90’s never made it even into the top 1000 in the billboard over the last 20 years.    
+        As we can see songs released in the 2000’s don't make it to the top 100 in **Rock** but do in both **Pop** and **Soul**. 
+        The top of the chart in **Pop** is often dominated by songs released in the 2000's. 
+        For **Soul** the songs that were released in the 90’s never made it even into the top 1000 in the billboard over the last 20 years.    
         """,
 
     ]),
